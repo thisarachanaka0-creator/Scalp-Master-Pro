@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Checkout — ScalpMaster Pro</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#050a0f;--surface:#0b1520;--card:#0f1e2e;--border:#1a3048;
+  --green:#00e676;--red:#ff1744;--aqua:#00bcd4;--gold:#ffd600;
+  --text:#e8f4f8;--muted:#6a8fa8;
+  --font-head:'Bebas Neue',sans-serif;
+  --font-mono:'DM Mono',monospace;
+  --font-body:'Outfit',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);overflow-x:hidden;min-height:100vh}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--green);border-radius:4px}
+body::before{content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(0,230,118,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,230,118,.02) 1px,transparent 1px);
+  background-size:40px 40px;pointer-events:none;z-index:0}
+
+/* NAV */
+nav{background:rgba(5,10,15,.95);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);padding:14px 40px;
+  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-family:var(--font-head);font-size:1.7rem;letter-spacing:2px;
+  background:linear-gradient(135deg,var(--green),var(--aqua));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  text-decoration:none}
+.back-btn{color:var(--muted);font-size:.8rem;font-family:var(--font-mono);
+  text-decoration:none;display:flex;align-items:center;gap:6px;transition:color .2s;letter-spacing:.5px}
+.back-btn:hover{color:var(--green)}
+
+/* PAGE TITLE */
+.page-top{padding:40px 24px 32px;text-align:center}
+.page-top h1{font-family:var(--font-head);font-size:clamp(2rem,5vw,3.5rem);
+  letter-spacing:3px;margin-bottom:8px}
+.page-top h1 span{background:linear-gradient(135deg,var(--green),var(--aqua));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.page-top p{color:var(--muted);font-size:.88rem;font-weight:300}
+
+/* PLAN TABS */
+.plan-tabs{display:flex;justify-content:center;gap:10px;padding:0 24px 36px;flex-wrap:wrap}
+.tab-btn{border:1px solid var(--border);background:var(--card);color:var(--muted);
+  font-family:var(--font-mono);font-size:.75rem;letter-spacing:1px;
+  padding:10px 22px;border-radius:8px;cursor:pointer;transition:all .2s}
+.tab-btn:hover{border-color:rgba(0,230,118,.4);color:var(--text)}
+.tab-btn.active{border-color:var(--green);color:var(--green);background:rgba(0,230,118,.07)}
+.tbadge{background:var(--green);color:#000;font-size:.6rem;padding:2px 7px;
+  border-radius:10px;font-weight:700;margin-left:4px}
+
+/* CHECKOUT GRID */
+.co-wrap{max-width:980px;margin:0 auto;padding:0 20px 100px;
+  display:grid;grid-template-columns:1fr 1.45fr;gap:22px;align-items:start}
+
+/* PLAN CARD */
+.plan-card{background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:28px;position:sticky;top:90px}
+.plan-card.hi{border-color:var(--green)}
+.pc-tag{font-family:var(--font-mono);font-size:.62rem;color:var(--green);
+  letter-spacing:2px;margin-bottom:10px}
+.pc-name{font-family:var(--font-head);font-size:2rem;letter-spacing:2px;margin-bottom:4px}
+.pc-desc{font-size:.75rem;color:var(--muted);margin-bottom:20px}
+.pc-price{font-family:var(--font-head);font-size:3rem;letter-spacing:2px;color:var(--green);line-height:1}
+.pc-was{font-size:.85rem;color:var(--muted);text-decoration:line-through;margin:4px 0}
+.pc-tag2{display:inline-block;background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.2);
+  color:var(--green);font-family:var(--font-mono);font-size:.62rem;
+  padding:3px 10px;border-radius:12px;margin-bottom:18px;letter-spacing:1px}
+.hdiv{border:none;border-top:1px solid var(--border);margin:18px 0}
+.pc-feats{list-style:none;display:flex;flex-direction:column;gap:9px}
+.pc-feats li{font-size:.79rem;display:flex;align-items:flex-start;gap:7px;line-height:1.4}
+.pc-feats li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;margin-top:1px}
+.guarantee{display:flex;align-items:center;gap:10px;margin-top:18px;
+  background:rgba(0,230,118,.04);border:1px solid rgba(0,230,118,.14);
+  border-radius:10px;padding:13px}
+.gt{font-size:.73rem;color:var(--muted);line-height:1.5}
+.gt strong{color:var(--text);display:block;font-size:.78rem;margin-bottom:2px}
+
+/* FORM CARD */
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.form-head{background:var(--surface);border-bottom:1px solid var(--border);padding:18px 26px}
+.form-head h2{font-family:var(--font-head);font-size:1.35rem;letter-spacing:2px}
+.form-head p{font-size:.75rem;color:var(--muted);margin-top:3px}
+
+/* PROGRESS */
+.progress{display:flex;border-bottom:1px solid var(--border)}
+.prog-step{flex:1;padding:13px 6px;text-align:center;font-family:var(--font-mono);
+  font-size:.67rem;letter-spacing:.8px;color:var(--muted);border-right:1px solid var(--border);
+  position:relative;transition:color .3s;cursor:default}
+.prog-step:last-child{border-right:none}
+.prog-step.active{color:var(--green)}
+.prog-step.done{color:var(--aqua)}
+.prog-step.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--green)}
+.prog-step.done::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--aqua)}
+.pn{display:inline-flex;align-items:center;justify-content:center;
+  width:17px;height:17px;border-radius:50%;background:rgba(0,230,118,.12);
+  font-size:.62rem;margin-right:5px;border:1px solid rgba(0,230,118,.25);color:var(--green)}
+.pn.dn{background:rgba(0,188,212,.12);border-color:rgba(0,188,212,.25);color:var(--aqua)}
+
+/* FORM BODY */
+.fb{padding:26px}
+
+/* FIELD */
+.field{margin-bottom:18px}
+.field label{display:block;font-family:var(--font-mono);font-size:.67rem;
+  color:var(--muted);letter-spacing:1px;margin-bottom:7px}
+.field label .req{color:var(--red)}
+.field input,.field select{width:100%;background:var(--surface);
+  border:1px solid var(--border);border-radius:8px;padding:11px 14px;
+  color:var(--text);font-size:.86rem;font-family:var(--font-body);
+  outline:none;transition:border-color .2s}
+.field input:focus,.field select:focus{border-color:rgba(0,230,118,.5);
+  box-shadow:0 0 0 3px rgba(0,230,118,.05)}
+.field input::placeholder{color:var(--muted)}
+.hint{font-size:.7rem;color:var(--muted);margin-top:5px;display:flex;align-items:flex-start;gap:4px;line-height:1.4}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* NETWORK GRID */
+.net-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.net-opt{border:1px solid var(--border);border-radius:10px;padding:14px 10px;
+  cursor:pointer;transition:all .2s;text-align:center;background:var(--surface)}
+.net-opt:hover{border-color:rgba(0,230,118,.35)}
+.net-opt.sel{border-color:var(--green);background:rgba(0,230,118,.06)}
+.ni{font-size:1.3rem;margin-bottom:6px}
+.nn{font-family:var(--font-mono);font-size:.76rem;font-weight:500;transition:color .2s}
+.nf{font-size:.66rem;color:var(--muted);margin-top:2px}
+.net-opt.sel .nn{color:var(--green)}
+
+/* CRYPTO PANEL */
+.crypto-panel{background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:22px;margin-bottom:18px}
+.c-amount{text-align:center;margin-bottom:18px}
+.c-label{font-size:.72rem;color:var(--muted);font-family:var(--font-mono);letter-spacing:1px}
+.c-usdt{font-family:var(--font-head);font-size:2.6rem;letter-spacing:2px;color:var(--gold);margin:4px 0;line-height:1}
+.c-sub{font-family:var(--font-mono);font-size:.68rem;color:var(--muted);letter-spacing:.5px}
+
+/* QR */
+.qr-wrap{display:flex;justify-content:center;margin-bottom:18px}
+.qr-box{background:#fff;border-radius:12px;padding:10px;width:136px;height:136px;
+  display:flex;align-items:center;justify-content:center}
+
+/* ADDRESS */
+.addr-box{background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:13px 14px;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.addr-txt{font-family:var(--font-mono);font-size:.7rem;color:var(--aqua);
+  word-break:break-all;flex:1;line-height:1.5}
+.copy-btn{background:rgba(0,188,212,.1);border:1px solid rgba(0,188,212,.25);
+  color:var(--aqua);font-family:var(--font-mono);font-size:.66rem;
+  padding:7px 12px;border-radius:7px;cursor:pointer;white-space:nowrap;
+  transition:all .2s;letter-spacing:.5px}
+.copy-btn:hover{background:rgba(0,188,212,.2)}
+.copy-btn.ok{background:rgba(0,230,118,.12);border-color:rgba(0,230,118,.3);color:var(--green)}
+
+/* TIMER */
+.timer-row{display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.14);
+  border-radius:8px;padding:10px 14px;margin-bottom:14px}
+.t-label{font-family:var(--font-mono);font-size:.68rem;color:var(--muted);letter-spacing:1px}
+.t-val{font-family:var(--font-head);font-size:1.3rem;letter-spacing:2px;color:var(--gold)}
+.t-val.urgent{color:var(--red)}
+
+/* BOXES */
+.warn-box{background:rgba(255,23,68,.05);border:1px solid rgba(255,23,68,.18);
+  border-radius:8px;padding:12px 14px;margin-bottom:14px;
+  font-size:.73rem;color:#ff9aaa;line-height:1.6}
+.warn-box strong{color:var(--red);display:block;margin-bottom:3px;font-size:.76rem}
+.info-box{background:rgba(0,188,212,.05);border:1px solid rgba(0,188,212,.18);
+  border-radius:8px;padding:12px 14px;margin-bottom:14px;
+  font-size:.73rem;color:#80d8e8;line-height:1.6}
+.info-box strong{color:var(--aqua);display:block;margin-bottom:3px;font-size:.76rem}
+
+/* TX INPUT */
+.tx-wrap{position:relative}
+.tx-wrap input{padding-right:82px}
+.tx-btn{position:absolute;right:7px;top:50%;transform:translateY(-50%);
+  background:var(--aqua);color:#000;font-weight:700;font-size:.68rem;
+  padding:6px 12px;border-radius:6px;border:none;cursor:pointer;
+  font-family:var(--font-mono);letter-spacing:.5px;transition:opacity .2s}
+.tx-btn:hover{opacity:.85}
+.tx-btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* BUTTONS */
+.btn-main{width:100%;background:linear-gradient(135deg,var(--green),#00c853);
+  color:#000;font-weight:700;font-size:.96rem;padding:15px;border-radius:10px;
+  border:none;cursor:pointer;font-family:var(--font-body);letter-spacing:.5px;
+  transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,230,118,.22)}
+.btn-main:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-back{width:100%;background:var(--surface);color:var(--muted);
+  font-size:.84rem;padding:13px;border-radius:10px;border:1px solid var(--border);
+  cursor:pointer;font-family:var(--font-body);transition:all .2s;margin-top:10px}
+.btn-back:hover{border-color:var(--border);color:var(--text)}
+.btn-row{display:flex;gap:10px}
+.btn-row .btn-back{flex:0 0 auto;width:auto;padding:13px 20px}
+
+/* STATUS STEPS */
+.status-steps{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.ss{display:flex;align-items:center;gap:12px;padding:13px 15px;
+  border-radius:10px;background:var(--surface);border:1px solid var(--border);
+  transition:all .4s}
+.ss.active-ss{border-color:rgba(0,230,118,.3);background:rgba(0,230,118,.04)}
+.ss.done-ss{border-color:rgba(0,188,212,.25);background:rgba(0,188,212,.04)}
+.ss-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;transition:background .3s}
+.ss-dot.pend{background:var(--border)}
+.ss-dot.act{background:var(--green);animation:sdot 1.4s ease-in-out infinite}
+.ss-dot.dn{background:var(--aqua)}
+@keyframes sdot{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,230,118,.4)}50%{opacity:.6;box-shadow:0 0 0 5px rgba(0,230,118,0)}}
+.ss-info h4{font-size:.8rem;font-weight:600;margin-bottom:2px}
+.ss-info p{font-size:.7rem;color:var(--muted)}
+
+/* SUCCESS */
+.success-scr{padding:38px 26px;text-align:center;display:none}
+.succ-icon{font-size:3.5rem;margin-bottom:14px;animation:bounce .6s ease}
+@keyframes bounce{0%{transform:scale(0)}80%{transform:scale(1.15)}100%{transform:scale(1)}}
+.success-scr h2{font-family:var(--font-head);font-size:2rem;letter-spacing:2px;color:var(--green);margin-bottom:8px}
+.success-scr p{color:var(--muted);font-size:.85rem;line-height:1.7;margin-bottom:22px;max-width:380px;margin-left:auto;margin-right:auto}
+.succ-detail{background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:16px;text-align:left;margin-bottom:18px}
+.sd-row{display:flex;justify-content:space-between;align-items:flex-start;
+  font-family:var(--font-mono);font-size:.73rem;padding:7px 0;
+  border-bottom:1px solid rgba(26,48,72,.4)}
+.sd-row:last-child{border-bottom:none}
+.sd-row span:last-child{color:var(--green);text-align:right;max-width:200px;word-break:break-all}
+.home-btn{display:inline-block;margin-top:6px;padding:12px 28px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;color:var(--muted);text-decoration:none;
+  font-size:.8rem;font-family:var(--font-mono);transition:all .2s}
+.home-btn:hover{border-color:var(--green);color:var(--green)}
+
+/* MOBILE */
+@media(max-width:720px){
+  nav{padding:12px 18px}
+  .co-wrap{grid-template-columns:1fr}
+  .plan-card{position:static}
+  .net-grid{grid-template-columns:1fr 1fr}
+  .field-row{grid-template-columns:1fr}
+  footer{flex-direction:column;text-align:center}
+}
+
+/* FOOTER */
+footer{max-width:980px;margin:0 auto;padding:28px 20px;
+  display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:center;
+  border-top:1px solid var(--border)}
+.footer-links{display:flex;gap:18px;list-style:none}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:.75rem;transition:color .2s}
+.footer-links a:hover{color:var(--green)}
+.footer-copy{font-family:var(--font-mono);font-size:.7rem;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">ScalpMaster</a>
+  <a href="index.html" class="back-btn">← Back to Home</a>
+</nav>
+
+<!-- PAGE TOP -->
+<div class="page-top">
+  <h1>GET <span>ACCESS</span></h1>
+  <p>Complete checkout below. Access granted within 5–30 min after payment confirmation.</p>
+</div>
+
+<!-- PLAN TABS -->
+<div class="plan-tabs">
+  <button class="tab-btn" id="tab-starter" onclick="setPlan('starter')">STARTER — $49</button>
+  <button class="tab-btn active" id="tab-pro" onclick="setPlan('pro')">PRO — $99 <span class="tbadge">BEST</span></button>
+  <button class="tab-btn" id="tab-elite" onclick="setPlan('elite')">ELITE — $179</button>
+</div>
+
+<!-- CHECKOUT GRID -->
+<div class="co-wrap">
+
+  <!-- LEFT: PLAN SUMMARY -->
+  <div class="plan-card hi" id="plan-card">
+    <div class="pc-tag">// YOUR PLAN</div>
+    <div class="pc-name" id="pc-name">PRO</div>
+    <div class="pc-desc" id="pc-desc">Everything you need to trade with edge</div>
+    <div class="pc-price" id="pc-price">$99</div>
+    <div class="pc-was" id="pc-was">$399</div>
+    <div class="pc-tag2">LIFETIME · ONE-TIME PAYMENT</div>
+    <hr class="hdiv"/>
+    <ul class="pc-feats" id="pc-feats">
+      <li>All 7-factor confluence signals</li>
+      <li>Pivot Points P / R1–R3 / S1–S3</li>
+      <li>RSI + Divergence Detection</li>
+      <li>MACD + Volume + Candle Patterns</li>
+      <li>🔮 Ghost Pattern Forecast</li>
+      <li>🎯 Auto SL / TP1 / TP2 Lines</li>
+      <li>📊 Probability % Table</li>
+      <li>🔔 All Alert Conditions</li>
+      <li>Free future updates</li>
+    </ul>
+    <div class="guarantee">
+      <span style="font-size:1.5rem">🔒</span>
+      <div class="gt">
+        <strong>Secure Crypto Payment</strong>
+        USDT · TRC20 / ERC20 / BEP20 / Solana<br>No personal card data stored
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: FORM -->
+  <div class="form-card">
+    <div class="form-head">
+      <h2>CHECKOUT</h2>
+      <p>3 quick steps to activate your lifetime access.</p>
+    </div>
+
+    <!-- PROGRESS BAR -->
+    <div class="progress">
+      <div class="prog-step active" id="ps1"><span class="pn">1</span>Details</div>
+      <div class="prog-step" id="ps2"><span class="pn">2</span>Network</div>
+      <div class="prog-step" id="ps3"><span class="pn">3</span>Payment</div>
+    </div>
+
+    <!-- ══ STEP 1 ══ -->
+    <div class="fb" id="s1">
+      <div class="field">
+        <label>TRADINGVIEW USERNAME <span class="req">*</span></label>
+        <input type="text" id="tv-user" placeholder="e.g. john_trader" autocomplete="off" spellcheck="false"/>
+        <div class="hint">ℹ️ Enter your exact username — access is added to this account</div>
+      </div>
+      <div class="field">
+        <label>EMAIL ADDRESS <span class="req">*</span></label>
+        <input type="email" id="email" placeholder="you@email.com"/>
+        <div class="hint">📧 Order confirmation will be sent here</div>
+      </div>
+      <div class="field">
+        <label>FULL NAME <span style="color:var(--muted);font-size:.6rem">(OPTIONAL)</span></label>
+        <input type="text" id="fullname" placeholder="Optional"/>
+      </div>
+      <div class="field">
+        <label>HOW DID YOU FIND US?</label>
+        <select id="source">
+          <option value="">— Optional —</option>
+          <option>YouTube</option>
+          <option>Twitter / X</option>
+          <option>TradingView Community</option>
+          <option>Google Search</option>
+          <option>Friend Referral</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <button class="btn-main" onclick="step1Next()">Continue → Choose Network</button>
+    </div>
+
+    <!-- ══ STEP 2 ══ -->
+    <div class="fb" id="s2" style="display:none">
+      <div class="field">
+        <label>SELECT USDT NETWORK <span class="req">*</span></label>
+        <div class="net-grid" style="grid-template-columns:1fr">
+          <div class="net-opt sel" id="n-trc" onclick="setNet('TRC20')"
+            style="display:flex;align-items:center;gap:16px;text-align:left;padding:18px 20px">
+            <div class="ni" style="font-size:2rem;flex-shrink:0">⚡</div>
+            <div>
+              <div class="nn" style="font-size:.9rem">TRC20 (Tron Network)</div>
+              <div class="nf" style="font-size:.76rem;margin-top:4px">Lowest fees (&lt;$1) · Fastest confirmation · Recommended</div>
+            </div>
+            <div style="margin-left:auto;font-family:var(--font-mono);font-size:.65rem;
+              color:var(--green);background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.25);
+              padding:3px 10px;border-radius:10px;white-space:nowrap">ONLY OPTION</div>
+          </div>
+        </div>
+      </div>
+      <div class="warn-box">
+        <strong>⚠️ Critical — Send on the correct network!</strong>
+        Sending USDT on the wrong network results in permanent loss of funds. Double check before sending.
+      </div>
+      <div class="info-box">
+        <strong>💡 TRC20 Recommended</strong>
+        TRC20 has fees under $1 and confirms in 1–3 minutes. Choose ERC20 / BEP20 only if your exchange requires it.
+      </div>
+      <div class="btn-row">
+        <button class="btn-back" onclick="goStep(1)">← Back</button>
+        <button class="btn-main" style="flex:1;margin-top:0" onclick="step2Next()">View Payment Address →</button>
+      </div>
+    </div>
+
+    <!-- ══ STEP 3 ══ -->
+    <div class="fb" id="s3" style="display:none">
+
+      <div class="crypto-panel">
+        <div class="c-amount">
+          <div class="c-label">SEND EXACTLY</div>
+          <div class="c-usdt" id="c-usdt">99 USDT</div>
+          <div class="c-sub">≈ $<span id="c-usd">99</span> USD · <span id="c-net">TRC20</span> Network</div>
+        </div>
+
+        <!-- Real QR Code -->
+        <div class="qr-wrap">
+          <div class="qr-box" style="width:164px;height:164px;padding:6px;border-radius:14px">
+            <img src="qr-trc20.jpg" alt="TRC20 USDT QR Code"
+              style="width:100%;height:100%;object-fit:contain;border-radius:6px;display:block"/>
+          </div>
+        </div>
+        <p style="text-align:center;font-family:var(--font-mono);font-size:.68rem;
+          color:var(--aqua);margin:-6px 0 14px;letter-spacing:.5px">
+          📷 Scan with your wallet app · TRC20 only
+        </p>
+
+        <!-- WALLET ADDRESS -->
+        <div class="addr-box">
+          <div class="addr-txt" id="wallet-addr">—</div>
+          <button class="copy-btn" id="copy-btn" onclick="copyAddr()">COPY</button>
+        </div>
+
+        <!-- TIMER -->
+        <div class="timer-row">
+          <span class="t-label">⏱ EXPIRES IN</span>
+          <span class="t-val" id="timer">29:59</span>
+        </div>
+
+        <div class="warn-box">
+          <strong>⚠️ Send EXACT amount: <span id="w-amt">99 USDT</span> on <span id="w-net">TRC20</span></strong>
+          Do NOT send any other token. Wrong network = permanent loss. Send only USDT to the address above.
+        </div>
+      </div>
+
+      <!-- TX HASH -->
+      <div class="field">
+        <label>PASTE TRANSACTION HASH / TXID AFTER SENDING <span class="req">*</span></label>
+        <div class="tx-wrap">
+          <input type="text" id="tx-hash" placeholder="e.g. abc123def456..." spellcheck="false"/>
+          <button class="tx-btn" onclick="verifyTx()" id="verify-btn">VERIFY</button>
+        </div>
+        <div class="hint">📋 Find this in your exchange withdrawal history or crypto wallet after sending</div>
+      </div>
+
+      <!-- STATUS -->
+      <div class="status-steps">
+        <div class="ss active-ss" id="ss1">
+          <div class="ss-dot act"></div>
+          <div class="ss-info"><h4>Awaiting Payment</h4><p>Send <span id="ss-amt">99 USDT</span> to the address above</p></div>
+        </div>
+        <div class="ss" id="ss2">
+          <div class="ss-dot pend" id="ss2-dot"></div>
+          <div class="ss-info"><h4>Payment Detected</h4><p>Transaction confirmed on blockchain</p></div>
+        </div>
+        <div class="ss" id="ss3">
+          <div class="ss-dot pend" id="ss3-dot"></div>
+          <div class="ss-info"><h4>Access Granted</h4><p>ScalpMaster Pro added to your TradingView account</p></div>
+        </div>
+      </div>
+
+      <button class="btn-main" id="confirm-btn" onclick="submitOrder()" disabled style="margin-top:18px">
+        ✅ Confirm — I've Sent the Payment
+      </button>
+      <button class="btn-back" onclick="goStep(2)">← Back to Network Selection</button>
+
+      <p style="text-align:center;font-family:var(--font-mono);font-size:.66rem;color:var(--muted);margin-top:14px">
+        🔒 Verified on-chain · Access granted within 5–30 minutes after confirmation
+      </p>
+    </div>
+
+    <!-- ══ SUCCESS ══ -->
+    <div class="success-scr" id="success-scr">
+      <div class="succ-icon">🎉</div>
+      <h2>SUBMITTED!</h2>
+      <p>Your payment is being verified on-chain. You'll receive <strong style="color:var(--green)">ScalpMaster Pro</strong> access on TradingView within 5–30 minutes.</p>
+      <div class="succ-detail">
+        <div class="sd-row"><span>Plan</span><span id="sc-plan">PRO</span></div>
+        <div class="sd-row"><span>TradingView</span><span id="sc-tv">—</span></div>
+        <div class="sd-row"><span>Email</span><span id="sc-email">—</span></div>
+        <div class="sd-row"><span>Amount</span><span id="sc-amt">99 USDT</span></div>
+        <div class="sd-row"><span>Network</span><span id="sc-net">TRC20</span></div>
+        <div class="sd-row"><span>TX Hash</span><span id="sc-tx" style="font-size:.65rem">—</span></div>
+        <div class="sd-row"><span>Status</span><span style="color:var(--gold)">⏳ Verifying on-chain</span></div>
+      </div>
+      <div class="info-box" style="text-align:left">
+        <strong>📧 Check Your Email</strong>
+        A confirmation was sent. If you don't get access within 30 min, contact us with your TX hash.
+      </div>
+      <a href="index.html" class="home-btn">← Return to Home</a>
+    </div>
+
+  </div><!-- /form-card -->
+</div><!-- /co-wrap -->
+
+<footer>
+  <span style="font-family:var(--font-head);font-size:1.3rem;background:linear-gradient(135deg,var(--green),var(--aqua));-webkit-background-clip:text;-webkit-text-fill-color:transparent">ScalpMaster</span>
+  <ul class="footer-links">
+    <li><a href="terms.html">Terms</a></li>
+    <li><a href="privacy.html">Privacy</a></li>
+    <li><a href="refund.html">Refund Policy</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 ScalpMaster Pro</div>
+</footer>
+
+<script>
+// ════════════════════════════════════════════
+// ⚠️  REPLACE THESE WITH YOUR REAL ADDRESSES
+// ════════════════════════════════════════════
+const WALLETS = {
+  TRC20: 'THmeDBLR8KY1F2J29hJkPm5QKxonauctsv',
+  ERC20: 'THmeDBLR8KY1F2J29hJkPm5QKxonauctsv', // TRC20 only — same shown
+  BEP20: 'THmeDBLR8KY1F2J29hJkPm5QKxonauctsv',
+  SOL:   'THmeDBLR8KY1F2J29hJkPm5QKxonauctsv',
+}
+
+// ════════════════════
+// PLAN DATA
+// ════════════════════
+const PLANS = {
+  starter: {
+    name:'STARTER', desc:'Perfect to get started', price:49, was:199,
+    feats:['All 7-factor confluence signals','Pivot Points P / R1–R3 / S1–S3',
+      'RSI + Divergence Detection','MACD + Volume + Candle Patterns',
+      'Live Dashboard Table','Basic Alert Conditions']
+  },
+  pro: {
+    name:'PRO', desc:'Everything you need to trade with edge', price:99, was:399,
+    feats:['All 7-factor confluence signals','Pivot Points P / R1–R3 / S1–S3',
+      'RSI + Divergence Detection','MACD + Volume + Candle Patterns',
+      '🔮 Ghost Pattern Forecast','🎯 Auto SL / TP1 / TP2 Lines',
+      '📊 Probability % Table','🔔 All Alert Conditions','Free future updates']
+  },
+  elite: {
+    name:'ELITE', desc:'For serious traders', price:179, was:699,
+    feats:['Everything in Pro','⚡ Priority Setup Support',
+      '📞 1-on-1 Onboarding Call','📘 Strategy Playbook PDF',
+      '🎓 Private Discord Access','🔄 All future indicators']
+  }
+}
+
+// ════════════════════
+// STATE
+// ════════════════════
+let state = { plan:'pro', price:99, network:'TRC20', step:1 }
+let timerInterval = null
+
+// ════════════════════
+// INIT — read URL params
+// ════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  const p = new URLSearchParams(window.location.search)
+  const planParam = p.get('plan')
+  if (planParam && PLANS[planParam]) setPlan(planParam)
+})
+
+// ════════════════════
+// SET PLAN
+// ════════════════════
+function setPlan(id) {
+  state.plan = id
+  state.price = PLANS[id].price
+  const p = PLANS[id]
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+  document.getElementById('tab-'+id).classList.add('active')
+  document.getElementById('pc-name').textContent = p.name
+  document.getElementById('pc-desc').textContent = p.desc
+  document.getElementById('pc-price').textContent = '$'+p.price
+  document.getElementById('pc-was').textContent = '$'+p.was
+  document.getElementById('pc-feats').innerHTML = p.feats.map(f=>`<li>${f}</li>`).join('')
+  updateAmounts()
+}
+
+// ════════════════════
+// SET NETWORK
+// ════════════════════
+function setNet(net) {
+  state.network = net
+  const map = {TRC20:'n-trc',ERC20:'n-erc',BEP20:'n-bsc',SOL:'n-sol'}
+  document.querySelectorAll('.net-opt').forEach(n=>n.classList.remove('sel'))
+  document.getElementById(map[net]).classList.add('sel')
+}
+
+// ════════════════════
+// UPDATE AMOUNTS ON SCREEN
+// ════════════════════
+function updateAmounts() {
+  const a = state.price, net = state.network
+  document.getElementById('c-usdt').textContent = a+' USDT'
+  document.getElementById('c-usd').textContent = a
+  document.getElementById('c-net').textContent = net
+  document.getElementById('w-amt').textContent = a+' USDT'
+  document.getElementById('w-net').textContent = net
+  document.getElementById('ss-amt').textContent = a+' USDT'
+  document.getElementById('wallet-addr').textContent = WALLETS[net]
+}
+
+// ════════════════════
+// STEP NAVIGATION
+// ════════════════════
+function goStep(n) {
+  state.step = n
+  ;[1,2,3].forEach(i => {
+    document.getElementById('s'+i).style.display = i===n ? 'block' : 'none'
+    const ps = document.getElementById('ps'+i)
+    ps.classList.remove('active','done')
+    if (i===n) ps.classList.add('active')
+    else if (i<n) {
+      ps.classList.add('done')
+      // change badge color
+      const pn = ps.querySelector('.pn')
+      if (pn) pn.classList.add('dn')
+    }
+  })
+  if (n===3) {
+    updateAmounts()
+    startTimer()
+  }
+}
+
+function step1Next() {
+  const tv = document.getElementById('tv-user').value.trim()
+  const em = document.getElementById('email').value.trim()
+  if (!tv) { alert('Please enter your TradingView username.'); return }
+  if (!em || !em.includes('@') || !em.includes('.')) { alert('Please enter a valid email address.'); return }
+  goStep(2)
+}
+
+function step2Next() { goStep(3) }
+
+// ════════════════════
+// COUNTDOWN TIMER
+// ════════════════════
+function startTimer() {
+  clearInterval(timerInterval)
+  let secs = 1799
+  const el = document.getElementById('timer')
+  timerInterval = setInterval(() => {
+    secs--
+    if (secs <= 0) { clearInterval(timerInterval); el.textContent = 'EXPIRED'; el.classList.add('urgent'); return }
+    const m = Math.floor(secs/60), s = secs%60
+    el.textContent = String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')
+    if (secs < 300) el.classList.add('urgent')
+  }, 1000)
+}
+
+// ════════════════════
+// COPY ADDRESS
+// ════════════════════
+function copyAddr() {
+  const addr = WALLETS[state.network]
+  if (!addr || addr.includes('Your')) {
+    alert('⚠️ Wallet address not configured yet. Please contact support.')
+    return
+  }
+  navigator.clipboard.writeText(addr).then(() => {
+    const btn = document.getElementById('copy-btn')
+    btn.textContent = '✓ COPIED'
+    btn.classList.add('ok')
+    setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('ok') }, 2500)
+  }).catch(() => {
+    // Fallback for older browsers
+    const ta = document.createElement('textarea')
+    ta.value = addr
+    document.body.appendChild(ta)
+    ta.select()
+    document.execCommand('copy')
+    document.body.removeChild(ta)
+    const btn = document.getElementById('copy-btn')
+    btn.textContent = '✓ COPIED'
+    btn.classList.add('ok')
+    setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('ok') }, 2500)
+  })
+}
+
+// ════════════════════
+// VERIFY TX
+// ════════════════════
+function verifyTx() {
+  const tx = document.getElementById('tx-hash').value.trim()
+  if (tx.length < 20) { alert('Please paste your full transaction hash first.'); return }
+  const vb = document.getElementById('verify-btn')
+  vb.textContent = '...'
+  vb.disabled = true
+  setTimeout(() => {
+    document.getElementById('ss1').classList.remove('active-ss')
+    document.getElementById('ss2').classList.add('active-ss')
+    document.getElementById('ss2-dot').className = 'ss-dot act'
+    vb.textContent = '✓ OK'
+    document.getElementById('confirm-btn').disabled = false
+    setTimeout(() => {
+      document.getElementById('ss2').classList.remove('active-ss')
+      document.getElementById('ss2').classList.add('done-ss')
+      document.getElementById('ss2-dot').className = 'ss-dot dn'
+    }, 1800)
+  }, 1200)
+}
+
+// ════════════════════
+// SUBMIT ORDER
+// ════════════════════
+function submitOrder() {
+  const tx = document.getElementById('tx-hash').value.trim()
+  if (!tx || tx.length < 20) { alert('Please paste your transaction hash and verify it first.'); return }
+
+  const tv = document.getElementById('tv-user').value.trim()
+  const em = document.getElementById('email').value.trim()
+
+  // Animate step 3
+  document.getElementById('ss3').classList.add('active-ss')
+  document.getElementById('ss3-dot').className = 'ss-dot act'
+
+  // Fill success screen
+  document.getElementById('sc-plan').textContent = PLANS[state.plan].name
+  document.getElementById('sc-tv').textContent = tv
+  document.getElementById('sc-email').textContent = em
+  document.getElementById('sc-amt').textContent = state.price+' USDT'
+  document.getElementById('sc-net').textContent = state.network
+  document.getElementById('sc-tx').textContent = tx.length>24 ? tx.substring(0,24)+'...' : tx
+
+  // Show success after delay
+  setTimeout(() => {
+    clearInterval(timerInterval)
+    document.querySelector('.form-head').style.display = 'none'
+    document.querySelector('.progress').style.display = 'none'
+    document.getElementById('s3').style.display = 'none'
+    document.getElementById('success-scr').style.display = 'block'
+
+    // 📌 OPTIONAL: Send order data to your backend/Telegram here
+    // fetch('https://your-backend.com/order', {
+    //   method: 'POST',
+    //   headers: {'Content-Type':'application/json'},
+    //   body: JSON.stringify({ plan:state.plan, price:state.price, network:state.network, tv, em, tx })
+    // })
+  }, 1400)
+}
+
+// ════════════════════
+// ENABLE CONFIRM BUTTON ON TX INPUT
+// ════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  const txInput = document.getElementById('tx-hash')
+  if (txInput) {
+    txInput.addEventListener('input', function() {
+      // Re-enable verify button if they change tx
+      const vb = document.getElementById('verify-btn')
+      if (vb && vb.textContent === '✓ OK') {
+        vb.textContent = 'VERIFY'
+        vb.disabled = false
+        document.getElementById('confirm-btn').disabled = true
+      }
+    })
+  }
+})
+</script>
+</body>
+</html>
