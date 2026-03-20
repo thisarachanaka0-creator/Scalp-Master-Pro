@@ -686,6 +686,12 @@ function verifyTx() {
   }, 1200)
 }
 
+// ════════════════════════════════════════
+// TELEGRAM CONFIG
+// ════════════════════════════════════════
+const TELEGRAM_TOKEN   = '8705520719:AAGb8d04GwLwceykXCMbf_v4L1Km1mT_zjI'
+const TELEGRAM_CHAT_ID = '1059462145'
+
 // ════════════════════
 // SUBMIT ORDER
 // ════════════════════
@@ -695,6 +701,7 @@ function submitOrder() {
 
   const tv = document.getElementById('tv-user').value.trim()
   const em = document.getElementById('email').value.trim()
+  const fn = document.getElementById('fullname').value.trim()
 
   // Animate step 3
   document.getElementById('ss3').classList.add('active-ss')
@@ -708,6 +715,37 @@ function submitOrder() {
   document.getElementById('sc-net').textContent = state.network
   document.getElementById('sc-tx').textContent = tx.length>24 ? tx.substring(0,24)+'...' : tx
 
+  // ══ TELEGRAM NOTIFICATION ══
+  const now = new Date().toLocaleString('en-GB', {timeZone:'Asia/Colombo'})
+  const lines = [
+    '\u{1F514} *NEW ORDER — ScalpMaster Pro!*',
+    '',
+    '\u{1F4E6} *Plan:* ' + PLANS[state.plan].name,
+    '\u{1F4B0} *Amount:* ' + state.price + ' USDT',
+    '\u{1F310} *Network:* ' + state.network,
+    '',
+    '\u{1F464} *TradingView:* `' + tv + '`',
+    '\u{1F4E7} *Email:* ' + em,
+    fn ? '\u{1F64B} *Name:* ' + fn : null,
+    '',
+    '\u{1F9FE} *TX Hash:*',
+    '`' + tx + '`',
+    '',
+    '\u{23F0} *Time (SL):* ' + now,
+    '',
+    '\u2705 _Grant TradingView access now!_'
+  ].filter(x => x !== null).join('\n')
+
+  fetch('https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/sendMessage', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      chat_id: TELEGRAM_CHAT_ID,
+      text: lines,
+      parse_mode: 'Markdown'
+    })
+  }).catch(()=>{})
+
   // Show success after delay
   setTimeout(() => {
     clearInterval(timerInterval)
@@ -715,13 +753,6 @@ function submitOrder() {
     document.querySelector('.progress').style.display = 'none'
     document.getElementById('s3').style.display = 'none'
     document.getElementById('success-scr').style.display = 'block'
-
-    // 📌 OPTIONAL: Send order data to your backend/Telegram here
-    // fetch('https://your-backend.com/order', {
-    //   method: 'POST',
-    //   headers: {'Content-Type':'application/json'},
-    //   body: JSON.stringify({ plan:state.plan, price:state.price, network:state.network, tv, em, tx })
-    // })
   }, 1400)
 }
 
