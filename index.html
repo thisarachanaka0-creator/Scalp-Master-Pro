@@ -258,7 +258,7 @@ footer{max-width:1100px;margin:0 auto;padding:36px 24px;
 <body>
 
 <!-- SALE BAR -->
-<div class="sale-bar">🚀 LIMITED TIME: ScalpMaster Pro — 75% OFF · Lifetime Access</div>
+<div class="sale-bar">🔥 FLASH SALE: 70% OFF TODAY ONLY — Prices go up at midnight! ⏰</div>
 
 <!-- NAV -->
 <nav>
@@ -383,6 +383,293 @@ footer{max-width:1100px;margin:0 auto;padding:36px 24px;
 </div>
 
 <!-- HOW IT WORKS -->
+
+<!-- ═══════════════════════════════════════════
+     ANIMATED CHART DEMO SECTION
+═══════════════════════════════════════════ -->
+<section style="padding:0 24px 80px;max-width:980px;margin:0 auto">
+  <div style="text-align:center;margin-bottom:32px">
+    <div class="tag" style="display:inline-block">// LIVE DEMO</div>
+    <div class="stitle" style="text-align:center;margin-top:8px">SEE IT IN ACTION</div>
+    <p style="color:var(--muted);font-size:.9rem;font-weight:300;margin-top:8px">Real-time simulation of ScalpMaster Pro on a BTCUSDT 15m chart</p>
+  </div>
+
+  <div style="background:var(--bg);border-radius:16px;overflow:hidden;border:1px solid var(--border);position:relative">
+    <!-- TOP BAR -->
+    <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:11px 18px;display:flex;align-items:center;gap:10px">
+      <div style="width:10px;height:10px;border-radius:50%;background:#ff5f57"></div>
+      <div style="width:10px;height:10px;border-radius:50%;background:#febc2e"></div>
+      <div style="width:10px;height:10px;border-radius:50%;background:#28c840"></div>
+      <span style="margin-left:8px;font-family:var(--font-mono);font-size:.73rem;color:var(--muted)">BTCUSDT · 15m · ScalpMaster Pro [Active]</span>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:5px;background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.25);color:var(--green);font-family:var(--font-mono);font-size:.65rem;padding:3px 10px;border-radius:20px;letter-spacing:1px">
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--green);animation:pdot2 1.4s ease-in-out infinite"></div>
+        LIVE
+      </div>
+    </div>
+
+    <!-- CHART CANVAS AREA -->
+    <div style="position:relative;overflow:hidden;height:340px;background:linear-gradient(180deg,#0b1520,#050a0f)">
+      <canvas id="smChart" style="display:block;width:100%;height:340px"></canvas>
+
+      <!-- OVERLAY TABLE -->
+      <div style="position:absolute;top:10px;right:10px;background:rgba(5,10,15,.9);border:1px solid var(--border);border-radius:8px;font-family:var(--font-mono);font-size:.62rem;overflow:hidden;min-width:118px">
+        <div style="display:grid;grid-template-columns:1fr 24px 24px;background:rgba(11,21,32,.9);padding:4px 8px;gap:4px;color:var(--muted);letter-spacing:.5px;font-size:.58rem">
+          <span>CHECK</span><span style="text-align:center">L</span><span style="text-align:center">S</span>
+        </div>
+        <div class="sm-row"><span style="color:var(--muted)">Pivot</span><span class="smck" id="sm1l">✅</span><span class="smcx" id="sm1s">❌</span></div>
+        <div class="sm-row"><span style="color:var(--muted)">RSI</span><span class="smck" id="sm2l">✅</span><span class="smcx" id="sm2s">❌</span></div>
+        <div class="sm-row"><span style="color:var(--muted)">Div</span><span class="smck" id="sm3l">✅</span><span class="smcx" id="sm3s">❌</span></div>
+        <div class="sm-row"><span style="color:var(--muted)">MACD</span><span class="smck" id="sm4l">✅</span><span class="smcx" id="sm4s">❌</span></div>
+        <div class="sm-row"><span style="color:var(--muted)">Vol</span><span class="smck" id="sm5l">✅</span><span class="smcx" id="sm5s">❌</span></div>
+        <div class="sm-row"><span style="color:var(--muted)">Cndle</span><span class="smck" id="sm6l">✅</span><span class="smcx" id="sm6s">❌</span></div>
+        <div class="sm-row"><span style="color:var(--muted)">Trend</span><span class="smcx" id="sm7l">❌</span><span class="smcx" id="sm7s">❌</span></div>
+        <div style="background:rgba(0,0,0,.35);padding:4px 8px;display:flex;justify-content:space-between;align-items:center">
+          <span style="color:var(--muted);font-size:.58rem">SCORE</span>
+          <span id="smScore" style="color:var(--green);font-size:.62rem">6/7</span>
+          <span id="smSig" style="font-size:.6rem;padding:2px 7px;border-radius:4px;font-weight:700;background:rgba(0,230,118,.18);color:var(--green);border:1px solid rgba(0,230,118,.28)">▲ LONG</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM STRIP -->
+    <div style="background:var(--surface);border-top:1px solid var(--border);padding:9px 18px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;font-family:var(--font-mono)">
+      <div style="display:flex;align-items:baseline;gap:6px">
+        <span id="smPrice" style="font-size:1.05rem;letter-spacing:1px">67,842.30</span>
+        <span id="smChg" style="font-size:.68rem;color:var(--green)">▲ +2.34%</span>
+      </div>
+      <div style="display:flex;gap:14px;margin-left:auto;flex-wrap:wrap">
+        <span style="font-size:.65rem;display:flex;align-items:center;gap:5px;color:var(--muted)"><span style="width:8px;height:8px;border-radius:50%;background:#ff9800;display:inline-block"></span>EMA 50</span>
+        <span style="font-size:.65rem;display:flex;align-items:center;gap:5px;color:var(--muted)"><span style="width:8px;height:8px;border-radius:50%;background:#9c27b0;display:inline-block"></span>EMA 200</span>
+        <span style="font-size:.65rem;display:flex;align-items:center;gap:5px;color:var(--muted)"><span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block"></span>LONG</span>
+        <span style="font-size:.65rem;display:flex;align-items:center;gap:5px;color:var(--muted)"><span style="width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block"></span>SHORT</span>
+        <span style="font-size:.65rem;display:flex;align-items:center;gap:5px;color:var(--muted)"><span style="width:8px;height:8px;border-radius:50%;background:rgba(0,230,118,.4);display:inline-block"></span>Ghost</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+@keyframes pdot2{0%,100%{opacity:1}50%{opacity:.15}}
+.sm-row{display:grid;grid-template-columns:1fr 24px 24px;padding:3px 8px;gap:4px;border-top:1px solid rgba(26,48,72,.4);align-items:center;font-family:var(--font-mono);font-size:.62rem}
+.smck{color:#00e676;text-align:center}
+.smcx{color:#ff1744;text-align:center}
+</style>
+
+<script>
+(function(){
+  const cv=document.getElementById('smChart')
+  if(!cv)return
+  const ctx=cv.getContext('2d')
+  const W=960,H=340
+  cv.width=W;cv.height=H
+  const C={g:'#00e676',r:'#ff1744',a:'#00bcd4',gold:'#ffd600',m:'#6a8fa8'}
+
+  function genC(n,sp,vol){
+    const a=[];let p=sp
+    for(let i=0;i<n;i++){
+      const d=Math.random()>.44?1:-1
+      const b=Math.random()*vol*.7+vol*.2
+      const o=p,c=p+d*b
+      const wk=b*(Math.random()*.6+.2)
+      const h=Math.max(o,c)+wk*(Math.random()*.8+.2)
+      const l=Math.min(o,c)-wk*(Math.random()*.8+.2)
+      p=c;a.push({o,c,h,l,bull:c>=o})
+    }
+    return a
+  }
+
+  let cd=genC(52,67200,260)
+  cd[32]={o:cd[31].c,c:cd[31].c+400,h:cd[31].c+440,l:cd[31].c-35,bull:true}
+  cd[33]={o:cd[32].c,c:cd[32].c+160,h:cd[32].c+200,l:cd[32].c-25,bull:true}
+
+  const sigs={28:{t:'l',sc:6},32:{t:'l',sc:7},45:{t:'s',sc:5}}
+
+  function ema(d,p){const k=2/(p+1);let e=d[0];return d.map(v=>{e=v*k+e*(1-k);return e})}
+
+  let tick=0,lOpen=cd[cd.length-1].c,lClose=lOpen,lHigh=lOpen+20,lLow=lOpen-20
+
+  // Price label
+  setInterval(()=>{
+    const t=cd[cd.length-1].c+(Math.random()-.44)*160
+    const diff=((t-67200)/67200*100)
+    const pe=document.getElementById('smPrice')
+    const ce=document.getElementById('smChg')
+    if(pe)pe.textContent=t.toFixed(2)
+    if(ce){ce.textContent=(diff>0?'▲ +':'▼ ')+Math.abs(diff).toFixed(2)+'%';ce.style.color=diff>0?C.g:C.r}
+  },1300)
+
+  // Table cycle
+  let tp=0
+  setInterval(()=>{
+    tp++
+    const scenarios=[
+      {l:[1,1,1,1,1,1,0],s:[0,0,0,0,1,0,1],sc:'6/7',sig:'▲ LONG',scol:C.g,sbg:'rgba(0,230,118,.18)',sbd:'rgba(0,230,118,.28)'},
+      {l:[0,1,0,1,1,0,0],s:[1,0,1,0,1,1,1],sc:'2/7',sig:'WAIT',scol:C.m,sbg:'rgba(106,143,168,.12)',sbd:'rgba(26,48,72,.5)'},
+      {l:[0,0,0,0,1,0,1],s:[1,1,1,1,1,1,0],sc:'2/7',sig:'▼ SHORT',scol:C.r,sbg:'rgba(255,23,68,.18)',sbd:'rgba(255,23,68,.28)'},
+      {l:[1,1,1,1,1,1,1],s:[0,0,0,0,1,0,0],sc:'7/7',sig:'▲ LONG',scol:C.g,sbg:'rgba(0,230,118,.25)',sbd:'rgba(0,230,118,.4)'},
+    ]
+    const sc=scenarios[tp%scenarios.length]
+    ;['1','2','3','4','5','6','7'].forEach((n,i)=>{
+      const le=document.getElementById('sm'+n+'l'),se=document.getElementById('sm'+n+'s')
+      if(le){le.textContent=sc.l[i]?'✅':'❌';le.className=sc.l[i]?'smck':'smcx'}
+      if(se){se.textContent=sc.s[i]?'✅':'❌';se.className=sc.s[i]?'smck':'smcx'}
+    })
+    const sse=document.getElementById('smScore'),sge=document.getElementById('smSig')
+    if(sse){sse.textContent=sc.sc;sse.style.color=sc.scol}
+    if(sge){sge.textContent=sc.sig;sge.style.color=sc.scol;sge.style.background=sc.sbg;sge.style.borderColor=sc.sbd}
+  },3500)
+
+  function rr(ctx,x,y,w,h,r){
+    ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y)
+    ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r)
+    ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h)
+    ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r)
+    ctx.quadraticCurveTo(x,y,x+r,y)
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H)
+    ctx.fillStyle='#050a0f';ctx.fillRect(0,0,W,H)
+
+    for(let i=1;i<5;i++){
+      ctx.strokeStyle='rgba(26,48,72,.4)';ctx.lineWidth=.5
+      ctx.beginPath();ctx.moveTo(0,H*i/5);ctx.lineTo(W,H*i/5);ctx.stroke()
+    }
+
+    const PL=8,PR=118,PT=18,PB=22
+    const cW=W-PL-PR,cH=H-PT-PB
+    const tot=cd.length+9,cw=Math.floor(cW/tot)
+    const bw=Math.max(2,cw-2)
+
+    let mn=Math.min(...cd.map(c=>c.l))-130
+    let mx=Math.max(...cd.map(c=>c.h))+130
+
+    const py=p=>PT+cH-((p-mn)/(mx-mn))*cH
+    const cx2=i=>PL+i*cw+cw/2
+
+    // Pivots
+    const pvs=[
+      {v:68380,lbl:'R2',c:'rgba(255,23,68,.5)',lc:'#ff4466',w:1.5},
+      {v:67950,lbl:'R1',c:'rgba(255,23,68,.32)',lc:'#ff6677',w:1,d:true},
+      {v:67480,lbl:'P', c:'rgba(255,255,255,.18)',lc:'#aaa',w:1,d:true},
+      {v:67050,lbl:'S1',c:'rgba(0,230,118,.32)',lc:'#00e676',w:1,d:true},
+      {v:66620,lbl:'S2',c:'rgba(0,230,118,.5)',lc:'#00c853',w:1.5},
+    ]
+    pvs.forEach(pv=>{
+      const y=py(pv.v)
+      ctx.strokeStyle=pv.c;ctx.lineWidth=pv.w||1
+      if(pv.d)ctx.setLineDash([6,5]);else ctx.setLineDash([])
+      ctx.beginPath();ctx.moveTo(PL,y);ctx.lineTo(W-PR+8,y);ctx.stroke()
+      ctx.setLineDash([])
+      ctx.fillStyle=pv.lc;ctx.font='10px DM Mono,monospace'
+      ctx.fillText(pv.lbl,W-PR+12,y+3)
+    })
+
+    // EMAs
+    const prices=cd.map(c=>(c.o+c.c)/2)
+    const e50=ema(prices,50),e200=ema(prices,200)
+    ;[[e50,'rgba(255,152,0,.45)',1],[e200,'rgba(156,39,176,.4)',1.5]].forEach(([arr,col,w])=>{
+      ctx.strokeStyle=col;ctx.lineWidth=w;ctx.setLineDash([]);ctx.beginPath()
+      arr.forEach((v,i)=>{const x=cx2(i),y=py(v);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)})
+      ctx.stroke()
+    })
+
+    // SL/TP zone
+    const sc=cd[32]
+    const slP=sc.l*.997,tp1=67950,tp2=68380
+    const sx=cx2(32),ex=cx2(cd.length-1)+cw*5
+    ctx.fillStyle='rgba(255,23,68,.055)';ctx.fillRect(sx,py(sc.c),ex-sx,py(slP)-py(sc.c))
+    ctx.fillStyle='rgba(0,230,118,.05)';ctx.fillRect(sx,py(tp1),ex-sx,py(sc.c)-py(tp1))
+    ;[{p:sc.c,c:'rgba(255,255,255,.28)',lbl:'ENTRY',lc:'#999'},
+      {p:slP,c:'rgba(255,23,68,.55)',lbl:'SL',lc:'#ff1744'},
+      {p:tp1,c:'rgba(0,230,118,.55)',lbl:'TP1  RR2.4:1',lc:'#00e676'},
+      {p:tp2,c:'rgba(0,188,212,.45)',lbl:'TP2',lc:'#00bcd4'}
+    ].forEach(({p,c,lbl,lc})=>{
+      const y=py(p)
+      ctx.strokeStyle=c;ctx.lineWidth=1;ctx.setLineDash([4,4])
+      ctx.beginPath();ctx.moveTo(sx,y);ctx.lineTo(ex,y);ctx.stroke()
+      ctx.setLineDash([]);ctx.fillStyle=lc;ctx.font='9px DM Mono,monospace'
+      ctx.fillText(lbl,ex+3,y+3)
+    })
+
+    // Candles
+    cd.forEach((c,i)=>{
+      const x=cx2(i),yh=py(c.h),yl=py(c.l),yo=py(c.o),yc=py(c.c)
+      const col=c.bull?C.g:C.r
+      ctx.strokeStyle=col+'99';ctx.lineWidth=1;ctx.setLineDash([])
+      ctx.beginPath();ctx.moveTo(x,yh);ctx.lineTo(x,yl);ctx.stroke()
+      ctx.fillStyle=col+'bb'
+      ctx.fillRect(x-bw/2,Math.min(yo,yc),bw,Math.max(1,Math.abs(yo-yc)))
+    })
+
+    // Ghost candles
+    const lc=cd[cd.length-1]
+    const gt=67950,dr=(gt-lc.c)/8
+    let gp=lc.c
+    for(let i=0;i<8;i++){
+      const x=cx2(cd.length+i)
+      if(x>W-PR)break
+      const dc=Math.max(.18,1-i*.09)
+      const go=gp,gc=gp+dr*(.8+Math.random()*.35)
+      const gr=55*dc
+      const gh=Math.max(go,gc)+gr*.4,gl=Math.min(go,gc)-gr*.4
+      const al=Math.round((0.32-i*.03)*255).toString(16).padStart(2,'0')
+      ctx.fillStyle='#00e676'+al;ctx.strokeStyle='#00e676'+al;ctx.lineWidth=1
+      ctx.beginPath();ctx.moveTo(x,py(gh));ctx.lineTo(x,py(gl));ctx.stroke()
+      ctx.fillRect(x-bw/2,Math.min(py(go),py(gc)),bw,Math.max(1,Math.abs(py(go)-py(gc))))
+      gp=gc
+    }
+    ctx.fillStyle='rgba(0,230,118,.75)';ctx.font='9px DM Mono,monospace'
+    ctx.fillText('→R1 74%',cx2(cd.length+7)+4,py(gp)-5)
+
+    // Signals
+    Object.entries(sigs).forEach(([idx,sig])=>{
+      const i=parseInt(idx),c=cd[i],x=cx2(i)
+      if(sig.t==='l'){
+        const y=py(c.l)-16
+        ctx.fillStyle=C.g
+        ctx.beginPath();ctx.moveTo(x,y+13);ctx.lineTo(x-7,y+1);ctx.lineTo(x+7,y+1);ctx.closePath();ctx.fill()
+        ctx.fillStyle='rgba(0,230,118,.16)';rr(ctx,x-22,y-22,46,16,3);ctx.fill()
+        ctx.fillStyle=C.g;ctx.font='bold 8.5px DM Mono,monospace'
+        ctx.fillText('▲ LONG '+sig.sc+'/7',x-20,y-11)
+      } else {
+        const y=py(c.h)+16
+        ctx.fillStyle=C.r
+        ctx.beginPath();ctx.moveTo(x,y-13);ctx.lineTo(x-7,y-1);ctx.lineTo(x+7,y-1);ctx.closePath();ctx.fill()
+        ctx.fillStyle='rgba(255,23,68,.16)';rr(ctx,x-24,y+6,50,16,3);ctx.fill()
+        ctx.fillStyle=C.r;ctx.font='bold 8.5px DM Mono,monospace'
+        ctx.fillText('▼ SHORT '+sig.sc+'/7',x-22,y+17)
+      }
+    })
+
+    // Prob badges
+    [{v:68380,p:62,c:'#ff8899'},{v:67950,p:74,c:'#ffaabb'},{v:67050,p:68,c:'#44ff88'},{v:66620,p:51,c:'#22cc66'}].forEach(({v,p,c})=>{
+      const y=py(v)
+      ctx.fillStyle=p>=70?'rgba(0,230,118,.13)':p>=50?'rgba(255,215,0,.1)':'rgba(255,23,68,.1)'
+      rr(ctx,PL+4,y-9,36,14,3);ctx.fill()
+      ctx.fillStyle=c;ctx.font='8px DM Mono,monospace';ctx.fillText(p+'%',PL+8,y+2)
+    })
+
+    // Live candle
+    tick++
+    const lt=tick*.04
+    lClose=lc.c+Math.sin(lt)*130+Math.sin(lt*2.1)*55
+    lHigh=Math.max(lClose,lOpen)+Math.abs(Math.sin(lt*1.8))*32
+    lLow=Math.min(lClose,lOpen)-Math.abs(Math.cos(lt*2))*28
+    const lx=cx2(cd.length)
+    const lb=lClose>=lOpen
+    ctx.strokeStyle=(lb?C.g:C.r)+'99';ctx.lineWidth=1;ctx.setLineDash([])
+    ctx.beginPath();ctx.moveTo(lx,py(lHigh));ctx.lineTo(lx,py(lLow));ctx.stroke()
+    ctx.fillStyle=(lb?C.g:C.r)+'cc'
+    ctx.fillRect(lx-bw/2,Math.min(py(lOpen),py(lClose)),bw,Math.max(1,Math.abs(py(lOpen)-py(lClose))))
+
+    requestAnimationFrame(draw)
+  }
+  draw()
+})()
+</script>
+<!-- ═══ END CHART SECTION ═══ -->
+
 <section id="how" class="sec">
   <div class="tag">// HOW IT WORKS</div>
   <div class="stitle">TRADE SMARTER<br>IN 4 STEPS</div>
@@ -481,8 +768,8 @@ footer{max-width:1100px;margin:0 auto;padding:36px 24px;
       <div class="plan">
         <div class="plan-name">STARTER</div>
         <div class="plan-desc">Perfect to get started</div>
-        <div class="plan-price">$49</div>
-        <div class="plan-was">$199</div>
+        <div class="plan-price">$15</div>
+        <div class="plan-was">$49</div>
         <div class="plan-billing">ONE-TIME · LIFETIME ACCESS</div>
         <ul class="plan-feats">
           <li>All 7-factor signals</li>
@@ -495,7 +782,7 @@ footer{max-width:1100px;margin:0 auto;padding:36px 24px;
           <li class="no">Auto SL / TP Lines</li>
           <li class="no">Probability % Table</li>
         </ul>
-        <button class="plan-btn outline" onclick="goBuy('starter',49)">Buy Starter →</button>
+        <button class="plan-btn outline" onclick="goBuy('starter',15)">Buy Starter →</button>
       </div>
 
       <!-- PRO -->
@@ -503,8 +790,8 @@ footer{max-width:1100px;margin:0 auto;padding:36px 24px;
         <div class="plan-badge">BEST VALUE</div>
         <div class="plan-name">PRO</div>
         <div class="plan-desc">Everything you need to win</div>
-        <div class="plan-price">$99</div>
-        <div class="plan-was">$399</div>
+        <div class="plan-price">$30</div>
+        <div class="plan-was">$99</div>
         <div class="plan-billing">ONE-TIME · LIFETIME ACCESS</div>
         <ul class="plan-feats">
           <li>All 7-factor confluence signals</li>
@@ -518,15 +805,15 @@ footer{max-width:1100px;margin:0 auto;padding:36px 24px;
           <li>📊 Probability % Table</li>
           <li>Free future updates</li>
         </ul>
-        <button class="plan-btn primary" onclick="goBuy('pro',99)">Get ScalpMaster Pro →</button>
+        <button class="plan-btn primary" onclick="goBuy('pro',30)">Get ScalpMaster Pro →</button>
       </div>
 
       <!-- ELITE -->
       <div class="plan">
         <div class="plan-name">ELITE</div>
         <div class="plan-desc">For serious traders</div>
-        <div class="plan-price">$179</div>
-        <div class="plan-was">$699</div>
+        <div class="plan-price">$54</div>
+        <div class="plan-was">$179</div>
         <div class="plan-billing">ONE-TIME · LIFETIME ACCESS</div>
         <ul class="plan-feats">
           <li>Everything in Pro</li>
@@ -536,7 +823,7 @@ footer{max-width:1100px;margin:0 auto;padding:36px 24px;
           <li>🎓 Private Discord Access</li>
           <li>🔄 All future indicators</li>
         </ul>
-        <button class="plan-btn outline" onclick="goBuy('elite',179)">Buy Elite →</button>
+        <button class="plan-btn outline" onclick="goBuy('elite',54)">Buy Elite →</button>
       </div>
 
     </div>
@@ -631,5 +918,174 @@ const io = new IntersectionObserver(entries => {
 }, { threshold: 0.1 })
 document.querySelectorAll('.step, .feat, .plan').forEach(el => io.observe(el))
 </script>
+
+<!-- ═══ COUNTDOWN TIMER ═══ -->
+<style>
+/* Countdown */
+.countdown-bar{background:linear-gradient(90deg,#0f1e2e,#0b1520);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:14px 24px;display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap}
+.cd-label{font-family:var(--font-mono);font-size:.75rem;color:var(--muted);letter-spacing:1px}
+.cd-units{display:flex;gap:10px;align-items:center}
+.cd-unit{text-align:center}
+.cd-num{font-family:var(--font-head);font-size:2rem;letter-spacing:2px;color:var(--gold);
+  background:var(--card);border:1px solid var(--border);border-radius:8px;
+  padding:4px 14px;min-width:56px;display:block;line-height:1.2}
+.cd-lbl{font-family:var(--font-mono);font-size:.58rem;color:var(--muted);
+  letter-spacing:1px;margin-top:3px;display:block;text-align:center}
+.cd-sep{font-family:var(--font-head);font-size:1.8rem;color:var(--gold);opacity:.5;padding-bottom:10px}
+
+/* Discount badge on plans */
+.disc-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--red),#ff5722);
+  color:#fff;font-family:var(--font-mono);font-size:.65rem;font-weight:700;
+  padding:4px 14px;border-radius:20px;letter-spacing:1px;white-space:nowrap;
+  box-shadow:0 4px 16px rgba(255,23,68,.4);animation:badgePop .5s ease}
+@keyframes badgePop{0%{transform:translateX(-50%) scale(0)}80%{transform:translateX(-50%) scale(1.1)}100%{transform:translateX(-50%) scale(1)}}
+
+/* Floating particles */
+.particles-wrap{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.particle{position:absolute;border-radius:50%;animation:floatUp linear infinite;opacity:0}
+@keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(0)}10%{opacity:.5}90%{opacity:.2}100%{opacity:0;transform:translateY(-100vh) scale(1.5)}}
+
+/* Glow on hero */
+@keyframes heroGlow{0%,100%{opacity:.06}50%{opacity:.12}}
+.hero-glow{animation:heroGlow 4s ease-in-out infinite!important}
+
+/* Number count-up */
+.stat-v{transition:all .3s ease}
+
+/* Plan hover glow */
+.plan.featured{animation:featGlow 3s ease-in-out infinite}
+@keyframes featGlow{0%,100%{box-shadow:0 0 40px rgba(0,230,118,.08)}50%{box-shadow:0 0 70px rgba(0,230,118,.18)}}
+
+/* Sale price flash */
+.plan-price{animation:priceFlash 2.5s ease-in-out infinite}
+@keyframes priceFlash{0%,100%{color:var(--green)}50%{color:#00ff88}}
+
+/* Ticker enhanced */
+.ticker-inner{animation:tick 22s linear infinite!important}
+
+/* Scroll reveal */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.shown{opacity:1;transform:translateY(0)}
+
+/* Pulse ring on CTA */
+.btn-primary{position:relative}
+.btn-primary::after{content:'';position:absolute;inset:-3px;border-radius:11px;
+  border:2px solid rgba(0,230,118,.4);animation:ringPulse 2s ease-in-out infinite;pointer-events:none}
+@keyframes ringPulse{0%,100%{opacity:0;transform:scale(1)}50%{opacity:1;transform:scale(1.03)}}
+
+/* Stats counter animation */
+@keyframes countUp{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+.stat-v{animation:countUp .8s ease forwards}
+
+/* Savings pill */
+.savings-pill{display:inline-flex;align-items:center;gap:5px;
+  background:rgba(255,23,68,.12);border:1px solid rgba(255,23,68,.25);
+  color:#ff6b6b;font-family:var(--font-mono);font-size:.65rem;
+  padding:3px 10px;border-radius:12px;margin-bottom:8px;letter-spacing:.5px}
+</style>
+
+<!-- COUNTDOWN TIMER (after sale bar) -->
+<script>
+// Inject countdown after sale bar
+document.addEventListener('DOMContentLoaded',()=>{
+  // Countdown
+  const cdBar = document.createElement('div')
+  cdBar.className = 'countdown-bar'
+  cdBar.innerHTML = \`
+    <span class="cd-label">⚡ SALE ENDS IN</span>
+    <div class="cd-units">
+      <div class="cd-unit"><span class="cd-num" id="cdH">00</span><span class="cd-lbl">HOURS</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-unit"><span class="cd-num" id="cdM">00</span><span class="cd-lbl">MINS</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-unit"><span class="cd-num" id="cdS">00</span><span class="cd-lbl">SECS</span></div>
+    </div>
+    <span class="cd-label" style="color:var(--red);animation:priceFlash 1.5s infinite">🔥 70% OFF</span>
+  \`
+  const ticker = document.querySelector('.ticker')
+  if(ticker) ticker.parentNode.insertBefore(cdBar, ticker.nextSibling)
+
+  // Set countdown to midnight
+  function updateCD(){
+    const now = new Date()
+    const midnight = new Date()
+    midnight.setHours(23,59,59,999)
+    const diff = midnight - now
+    const h = Math.floor(diff/3600000)
+    const m = Math.floor((diff%3600000)/60000)
+    const s = Math.floor((diff%60000)/1000)
+    const pad = n=>String(n).padStart(2,'0')
+    document.getElementById('cdH').textContent = pad(h)
+    document.getElementById('cdM').textContent = pad(m)
+    document.getElementById('cdS').textContent = pad(s)
+  }
+  updateCD()
+  setInterval(updateCD, 1000)
+
+  // Add discount badges to plans
+  document.querySelectorAll('.plan').forEach(plan=>{
+    plan.style.position = 'relative'
+    const badge = document.createElement('div')
+    badge.className = 'disc-badge'
+    badge.textContent = '🔥 70% OFF'
+    plan.appendChild(badge)
+  })
+
+  // Add savings pills to plan prices
+  const planPrices = [{was:49,now:15},{was:99,now:30},{was:179,now:54}]
+  document.querySelectorAll('.plan-was').forEach((el,i)=>{
+    if(planPrices[i]){
+      const saved = planPrices[i].was - planPrices[i].now
+      const pill = document.createElement('div')
+      pill.className = 'savings-pill'
+      pill.innerHTML = \`💰 You save $\${saved}!\`
+      el.parentNode.insertBefore(pill, el)
+    }
+  })
+
+  // Floating particles
+  const pw = document.createElement('div')
+  pw.className = 'particles-wrap'
+  document.body.appendChild(pw)
+  const colors=['#00e676','#00bcd4','#ffd600','#ff1744']
+  for(let i=0;i<18;i++){
+    const p=document.createElement('div')
+    p.className='particle'
+    const size=Math.random()*5+2
+    p.style.cssText=\`
+      width:\${size}px;height:\${size}px;
+      background:\${colors[Math.floor(Math.random()*colors.length)]};
+      left:\${Math.random()*100}%;
+      bottom:-20px;
+      animation-duration:\${Math.random()*12+8}s;
+      animation-delay:\${Math.random()*8}s;
+    \`
+    pw.appendChild(p)
+  }
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.step,.feat,.plan,.demo-wrap')
+  const ro = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('shown') })
+  },{threshold:.08})
+  revealEls.forEach(el=>{ el.classList.add('reveal'); ro.observe(el) })
+
+  // Number count-up on stats
+  const stats = document.querySelectorAll('.stat-v')
+  const sro = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.style.animation='none'
+        setTimeout(()=>{ e.target.style.animation='countUp .8s ease forwards' },10)
+      }
+    })
+  },{threshold:.5})
+  stats.forEach(s=>sro.observe(s))
+})
+</script>
+
 </body>
 </html>
