@@ -253,6 +253,140 @@ footer{max-width:1100px;margin:0 auto;padding:36px 24px;
   footer{flex-direction:column;text-align:center}
   .footer-links{justify-content:center;flex-wrap:wrap}
 }
+
+/* ═══ PAGE ANIMATIONS ═══ */
+
+/* Hero text reveal */
+@keyframes heroReveal{
+  from{opacity:0;transform:translateY(40px) scale(.97)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes fadeSlideUp{
+  from{opacity:0;transform:translateY(24px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes glowPulse{
+  0%,100%{text-shadow:0 0 20px rgba(0,230,118,0)}
+  50%{text-shadow:0 0 60px rgba(0,230,118,.25)}
+}
+@keyframes borderFlow{
+  0%{border-color:rgba(0,230,118,.2)}
+  50%{border-color:rgba(0,230,118,.6)}
+  100%{border-color:rgba(0,230,118,.2)}
+}
+@keyframes countPulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.08)}
+}
+@keyframes shimmerText{
+  0%{background-position:200% center}
+  100%{background-position:-200% center}
+}
+@keyframes navSlide{
+  from{transform:translateY(-100%);opacity:0}
+  to{transform:translateY(0);opacity:1}
+}
+@keyframes saleGlow{
+  0%,100%{box-shadow:none}
+  50%{box-shadow:0 2px 20px rgba(0,200,83,.4)}
+}
+
+/* Nav */
+nav{animation:navSlide .5s ease forwards}
+
+/* Sale bar */
+.sale-bar{animation:saleGlow 3s ease-in-out infinite}
+
+/* Hero h1 */
+.hero h1{animation:heroReveal .9s cubic-bezier(.2,.8,.3,1) .2s both}
+
+/* Hero subtitle */
+.hero-sub{animation:fadeSlideUp .7s ease .5s both}
+
+/* Hero buttons */
+.hero-btns{animation:fadeSlideUp .7s ease .7s both}
+
+/* Stats strip */
+.stats-strip{animation:fadeSlideUp .7s ease .9s both}
+
+/* Stat values glow */
+.stat-v.g{animation:glowPulse 3s ease-in-out infinite}
+
+/* Chart section */
+.chart-section{animation:fadeSlideUp .8s ease .4s both}
+.chart-wrap{animation:borderFlow 4s ease-in-out infinite}
+
+/* Section titles */
+.stitle{
+  background:linear-gradient(90deg,var(--text) 0%,var(--green) 50%,var(--text) 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:shimmerText 5s linear infinite
+}
+
+/* Step numbers */
+.snum{animation:glowPulse 4s ease-in-out infinite}
+
+/* Feat icons hover */
+.feat:hover .ficon{
+  transform:scale(1.15) rotate(-5deg);
+  transition:transform .3s ease;
+  background:rgba(0,230,118,.18)
+}
+.ficon{transition:all .3s ease}
+
+/* Featured plan extra glow */
+.plan.featured{
+  animation:featGlow2 3s ease-in-out infinite
+}
+@keyframes featGlow2{
+  0%,100%{box-shadow:0 0 30px rgba(0,230,118,.08),0 0 0 1px rgba(0,230,118,.3)}
+  50%{box-shadow:0 0 60px rgba(0,230,118,.2),0 0 0 1px rgba(0,230,118,.6)}
+}
+
+/* CTA section */
+.final-cta h2{animation:heroReveal .8s ease both}
+.final-cta .btn-primary{animation:fadeSlideUp .7s ease .3s both}
+
+/* Countdown numbers */
+.cd-num{
+  animation:countPulse 1s ease-in-out infinite;
+  transition:color .3s
+}
+#cdS{animation:countPulse 1s ease-in-out infinite}
+
+/* Savings pill */
+.savings-pill{animation:borderFlow 2.5s ease-in-out infinite}
+
+/* Trust items */
+.trust-item{
+  transition:all .3s ease;
+}
+.trust-item:hover{
+  border-color:rgba(0,230,118,.4);
+  color:var(--green);
+  transform:translateY(-3px)
+}
+
+/* btn-primary shine */
+.btn-primary{overflow:hidden;position:relative}
+.btn-primary::before{
+  content:'';
+  position:absolute;
+  top:0;left:-100%;
+  width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+  animation:btnShine2 2.5s ease-in-out infinite
+}
+@keyframes btnShine2{
+  0%{left:-100%}
+  50%,100%{left:150%}
+}
+
+/* Scroll-based counter animation */
+.stat-v[data-count]{opacity:0;transform:translateY(10px);transition:all .5s ease}
+.stat-v[data-count].counted{opacity:1;transform:translateY(0)}
 </style>
 </head>
 <body>
@@ -1038,7 +1172,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     + '<span class="cd-label sale-flash" style="color:var(--red)">70% OFF — 7 DAYS ONLY</span>'
 
   const ticker = document.querySelector('.ticker')
-  if(ticker) ticker.parentNode.insertBefore(cdBar, ticker.nextSibling)
+  if(ticker) ticker.parentNode.insertBefore(cdBar, ticker)
 
   // Set countdown to midnight
   function updateCD(){
@@ -1116,6 +1250,118 @@ document.addEventListener('DOMContentLoaded',()=>{
   },{threshold:.5})
   stats.forEach(s=>sro.observe(s))
 })
+</script>
+
+
+<script>
+// ══ SCROLL COUNTER ANIMATION ══
+(function() {
+  var stats = [
+    {id:null, selector:'.stat-v.g', targets:['7','0'], suffix:['','']},
+  ]
+
+  // Animate number counting up
+  function animateCount(el, target, duration) {
+    var isNum = !isNaN(parseInt(target))
+    if (!isNum) return
+    var start = 0
+    var end = parseInt(target)
+    var startTime = null
+    var step = function(timestamp) {
+      if (!startTime) startTime = timestamp
+      var progress = Math.min((timestamp - startTime) / duration, 1)
+      var ease = 1 - Math.pow(1 - progress, 3)
+      el.textContent = Math.round(ease * end)
+      if (progress < 1) requestAnimationFrame(step)
+      else el.textContent = target
+    }
+    requestAnimationFrame(step)
+  }
+
+  // Observe stat values for count-up
+  var statEls = document.querySelectorAll('.stat-v')
+  var statObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting && !e.target.dataset.counted) {
+        e.target.dataset.counted = '1'
+        var txt = e.target.textContent.trim()
+        if (!isNaN(parseInt(txt))) {
+          e.target.textContent = '0'
+          animateCount(e.target, txt, 1200)
+        }
+      }
+    })
+  }, {threshold: 0.5})
+  statEls.forEach(function(el) { statObserver.observe(el) })
+
+  // ══ PARALLAX on hero glow ══
+  document.addEventListener('mousemove', function(e) {
+    var glow = document.querySelector('.hero-glow')
+    if (!glow) return
+    var x = (e.clientX / window.innerWidth - 0.5) * 30
+    var y = (e.clientY / window.innerHeight - 0.5) * 20
+    glow.style.transform = 'translateX(calc(-50% + ' + x + 'px)) translateY(' + y + 'px)'
+  })
+
+  // ══ SMOOTH REVEAL on scroll (steps, feats, plan) ══
+  var revealItems = document.querySelectorAll('.step, .feat')
+  var revealObs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e, idx) {
+      if (e.isIntersecting) {
+        var delay = (idx % 4) * 80
+        setTimeout(function() {
+          e.target.style.opacity = '1'
+          e.target.style.transform = 'translateY(0)'
+        }, delay)
+        revealObs.unobserve(e.target)
+      }
+    })
+  }, {threshold: 0.1, rootMargin: '0px 0px -40px 0px'})
+  revealItems.forEach(function(el) {
+    el.style.transition = 'opacity .6s ease, transform .6s ease, border-color .3s, box-shadow .3s'
+  })
+  revealItems.forEach(function(el) { revealObs.observe(el) })
+
+  // ══ TYPEWRITER on hero badge ══
+  var badge = document.querySelector('.badge')
+  if (badge) {
+    var original = badge.textContent
+    badge.textContent = ''
+    var i = 0
+    function type() {
+      if (i < original.length) {
+        badge.textContent += original[i]
+        i++
+        setTimeout(type, 28)
+      }
+    }
+    setTimeout(type, 300)
+  }
+
+  // ══ STICKY NAV background on scroll ══
+  var nav = document.querySelector('nav')
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 60) {
+      nav.style.background = 'rgba(5,10,15,.98)'
+      nav.style.boxShadow = '0 2px 24px rgba(0,0,0,.4)'
+    } else {
+      nav.style.background = 'rgba(5,10,15,.92)'
+      nav.style.boxShadow = 'none'
+    }
+  }, {passive:true})
+
+  // ══ PRICING plan hover lift ══
+  var plans = document.querySelectorAll('.plan')
+  plans.forEach(function(plan) {
+    plan.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-8px)'
+    })
+    plan.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0)'
+    })
+  })
+
+})()
 </script>
 
 </body>
