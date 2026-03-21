@@ -62,7 +62,7 @@ nav{background:rgba(5,10,15,.95);backdrop-filter:blur(16px);
 /* PLAN CARD */
 .plan-card{background:var(--card);border:1px solid var(--border);
   border-radius:16px;padding:28px;position:sticky;top:90px}
-.plan-card.hi{border-color:var(--green)}
+.plan-card.hi{border-color:var(--green);border-width:1.5px}
 .pc-tag{font-family:var(--font-mono);font-size:.62rem;color:var(--green);
   letter-spacing:2px;margin-bottom:10px}
 .pc-name{font-family:var(--font-head);font-size:2rem;letter-spacing:2px;margin-bottom:4px}
@@ -233,6 +233,69 @@ nav{background:rgba(5,10,15,.95);backdrop-filter:blur(16px);
   font-size:.8rem;font-family:var(--font-mono);transition:all .2s}
 .home-btn:hover{border-color:var(--green);color:var(--green)}
 
+/* ANIMATIONS */
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideInRight{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+
+.plan-card{animation:slideInLeft .6s ease forwards}
+.form-card{animation:slideInRight .6s ease forwards}
+.page-top{animation:fadeInDown .5s ease forwards}
+
+/* Price shimmer */
+.pc-price{
+  background:linear-gradient(90deg,var(--green) 0%,#00ff88 50%,var(--green) 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:shimmer 2.5s linear infinite
+}
+
+/* Progress step animation */
+.prog-step.active{
+  animation:none;
+}
+
+/* Input focus glow */
+.field input:focus,.field select:focus{
+  border-color:rgba(0,230,118,.6);
+  box-shadow:0 0 0 3px rgba(0,230,118,.08),0 0 20px rgba(0,230,118,.06)
+}
+
+/* Button pulse */
+.btn-main{
+  position:relative;overflow:hidden;
+}
+.btn-main::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);
+  transform:translateX(-100%);
+  animation:btnShine 2.5s ease-in-out infinite
+}
+@keyframes btnShine{0%{transform:translateX(-100%)}50%,100%{transform:translateX(100%)}}
+
+/* Feature list stagger */
+.pc-feats li{
+  opacity:0;animation:fadeInDown .4s ease forwards;
+}
+.pc-feats li:nth-child(1){animation-delay:.1s}
+.pc-feats li:nth-child(2){animation-delay:.15s}
+.pc-feats li:nth-child(3){animation-delay:.2s}
+.pc-feats li:nth-child(4){animation-delay:.25s}
+.pc-feats li:nth-child(5){animation-delay:.3s}
+.pc-feats li:nth-child(6){animation-delay:.35s}
+.pc-feats li:nth-child(7){animation-delay:.4s}
+.pc-feats li:nth-child(8){animation-delay:.45s}
+.pc-feats li:nth-child(9){animation-delay:.5s}
+.pc-feats li:nth-child(10){animation-delay:.55s}
+
+/* Plan card border glow */
+.plan-card{
+  box-shadow:0 0 0 1px var(--border),0 0 40px rgba(0,230,118,.08);
+  animation:slideInLeft .6s ease forwards, cardGlow 3s ease-in-out 1s infinite
+}
+@keyframes cardGlow{0%,100%{box-shadow:0 0 0 1px var(--green),0 0 30px rgba(0,230,118,.08)}50%{box-shadow:0 0 0 1px var(--green),0 0 50px rgba(0,230,118,.16)}}
+
 /* MOBILE */
 @media(max-width:720px){
   nav{padding:12px 18px}
@@ -283,8 +346,8 @@ footer{max-width:980px;margin:0 auto;padding:28px 20px;
     <div class="pc-name" id="pc-name">PRO</div>
     <div class="pc-desc" id="pc-desc">Everything you need to trade with edge</div>
     <div class="pc-price" id="pc-price">$30</div>
-    <div class="pc-was" id="pc-was">$99</div>
-    <div class="pc-tag2">LIFETIME · ONE-TIME PAYMENT</div>
+    <div class="pc-was" id="pc-was" style="text-decoration:line-through;color:var(--muted)">$99</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="background:rgba(255,23,68,.15);border:1px solid rgba(255,23,68,.3);color:#ff8888;font-family:var(--font-mono);font-size:.62rem;padding:3px 10px;border-radius:12px;letter-spacing:.5px">🔥 70% OFF</span><span style="background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.2);color:var(--green);font-family:var(--font-mono);font-size:.62rem;padding:3px 10px;border-radius:12px;letter-spacing:.5px">💰 Save $69</span></div><div class="pc-tag2">LIFETIME · ONE-TIME PAYMENT</div>
     <hr class="hdiv"/>
     <ul class="pc-feats" id="pc-feats">
       <li>All 7-factor confluence signals</li>
@@ -515,7 +578,7 @@ const PLANS = {
       'Live Dashboard Table','Basic Alert Conditions']
   },
   pro: {
-    name:'PRO', desc:'Everything you need to trade with edge', price:99, was:399,
+    name:'PRO', desc:'Everything you need to trade with edge', price:30, was:99,
     feats:['All 7-factor confluence signals','Pivot Points P / R1–R3 / S1–S3',
       'RSI + Divergence Detection','MACD + Volume + Candle Patterns',
       '🔮 Ghost Pattern Forecast','🎯 Auto SL / TP1 / TP2 Lines',
@@ -557,7 +620,7 @@ function setPlan(id) {
   document.getElementById('pc-desc').textContent = p.desc
   document.getElementById('pc-price').textContent = '$'+p.price
   document.getElementById('pc-was').textContent = '$'+p.was
-  document.getElementById('pc-feats').innerHTML = p.feats.map(f=>`<li>${f}</li>`).join('')
+  document.getElementById('pc-feats').innerHTML = p.feats.map(function(f){return '<li>'+f+'</li>'}).join('')
   updateAmounts()
 }
 
