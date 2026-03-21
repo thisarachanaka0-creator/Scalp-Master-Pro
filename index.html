@@ -323,7 +323,7 @@ footer{max-width:1100px;margin:0 auto;padding:36px 24px;
           el.innerHTML = buildTicker(data)
           el.style.animation = 'none'
           el.offsetHeight
-          el.style.animation = 'tick 32s linear infinite'
+          el.style.animation = 'tick 38s linear infinite'
         }
       })
       .catch(function(){}) // silent fail - keep old data
@@ -483,7 +483,7 @@ footer{max-width:1100px;margin:0 auto;padding:36px 24px;
     <div style="background:var(--surface);border-top:1px solid var(--border);padding:9px 18px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;font-family:var(--font-mono)">
       <div style="display:flex;align-items:baseline;gap:6px">
         <span id="smPrice" style="font-size:1.05rem;letter-spacing:1px">67,842.30</span>
-        <span id="smChg" style="font-size:.68rem;color:var(--green)">▲ +2.34%</span>
+        <span id="smChg" style="font-size:.68rem;color:var(--green)">▲ +2.34%</span><span style="font-family:var(--font-mono);font-size:.62rem;color:var(--muted);margin-left:8px;background:rgba(0,188,212,.1);border:1px solid rgba(0,188,212,.2);padding:2px 8px;border-radius:10px">LIVE · BTC/USD</span>
       </div>
       <div style="display:flex;gap:14px;margin-left:auto;flex-wrap:wrap">
         <span style="font-size:.65rem;display:flex;align-items:center;gap:5px;color:var(--muted)"><span style="width:8px;height:8px;border-radius:50%;background:#ff9800;display:inline-block"></span>EMA 50</span>
@@ -537,14 +537,35 @@ footer{max-width:1100px;margin:0 auto;padding:36px 24px;
   let tick=0,lOpen=cd[cd.length-1].c,lClose=lOpen,lHigh=lOpen+20,lLow=lOpen-20
 
   // Price label
-  setInterval(()=>{
-    const t=cd[cd.length-1].c+(Math.random()-.44)*160
-    const diff=((t-67200)/67200*100)
-    const pe=document.getElementById('smPrice')
-    const ce=document.getElementById('smChg')
-    if(pe)pe.textContent=t.toFixed(2)
-    if(ce){ce.textContent=(diff>0?'▲ +':'▼ ')+Math.abs(diff).toFixed(2)+'%';ce.style.color=diff>0?C.g:C.r}
-  },1300)
+  // Live BTCUSDT price for chart demo
+  function fetchBTCPrice() {
+    fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true')
+      .then(function(r){return r.json()})
+      .then(function(data){
+        var btc = data.bitcoin
+        if (!btc) return
+        var price = btc.usd
+        var chg = btc.usd_24h_change || 0
+        var pe = document.getElementById('smPrice')
+        var ce = document.getElementById('smChg')
+        if(pe) pe.textContent = price.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})
+        if(ce){
+          ce.textContent = (chg>=0?'▲ +':'▼ ')+Math.abs(chg).toFixed(2)+'%'
+          ce.style.color = chg>=0?C.g:C.r
+        }
+        // Update chart candle base price to match real BTC
+        if(price && cd.length > 0) {
+          var diff2 = price - cd[cd.length-1].c
+          if(Math.abs(diff2) > 500) {
+            // Shift all candles to match real price range
+            cd = cd.map(function(c){ return {o:c.o+diff2,c:c.c+diff2,h:c.h+diff2,l:c.l+diff2,bull:c.bull} })
+            lOpen = cd[cd.length-1].c
+          }
+        }
+      }).catch(function(){})
+  }
+  fetchBTCPrice()
+  setInterval(fetchBTCPrice, 30000)
 
   // Table cycle
   let tp=0
@@ -810,42 +831,22 @@ footer{max-width:1100px;margin:0 auto;padding:36px 24px;
     <div class="tag" style="display:block">// PRICING</div>
     <div class="stitle" style="text-align:center">CHOOSE YOUR PLAN</div>
     <p style="color:var(--muted);font-size:.88rem;font-weight:300">One-time payment. Lifetime access. Enter your TradingView username at checkout.</p>
-    <div class="plans" style="margin-top:72px">
+    <div class="plans" style="margin-top:72px;max-width:420px;margin-left:auto;margin-right:auto">
 
-      <!-- STARTER -->
-      <div class="plan">
-        <div class="plan-name">STARTER</div>
-        <div class="plan-desc">Perfect to get started</div>
-        <div class="plan-price">$15</div>
-        <div class="plan-was">$49</div>
-        <div class="plan-billing">ONE-TIME · LIFETIME ACCESS</div>
-        <ul class="plan-feats">
-          <li>All 7-factor signals</li>
-          <li>Pivot Points P / R1–R3 / S1–S3</li>
-          <li>RSI + Divergence Detection</li>
-          <li>MACD + Volume + Candle</li>
-          <li>Live Dashboard Table</li>
-          <li>Basic Alert Conditions</li>
-          <li class="no">Ghost Pattern Forecast</li>
-          <li class="no">Auto SL / TP Lines</li>
-          <li class="no">Probability % Table</li>
-        </ul>
-        <button class="plan-btn outline" onclick="goBuy('starter',15)">Buy Starter →</button>
-      </div>
-
-      <!-- PRO -->
-      <div class="plan featured">
+      <!-- PRO — ONLY PLAN -->
+      <div class="plan featured" style="opacity:1;transform:translateY(0)">
         <div class="plan-badge">BEST VALUE</div>
         <div class="plan-name">PRO</div>
-        <div class="plan-desc">Everything you need to win</div>
+        <div class="plan-desc">Everything you need to trade with edge</div>
         <div class="plan-price">$30</div>
         <div class="plan-was">$99</div>
+        <div class="savings-pill">💰 You save $69!</div>
         <div class="plan-billing">ONE-TIME · LIFETIME ACCESS</div>
         <ul class="plan-feats">
           <li>All 7-factor confluence signals</li>
           <li>Pivot Points P / R1–R3 / S1–S3</li>
           <li>RSI + Divergence Detection</li>
-          <li>MACD + Volume + Candle</li>
+          <li>MACD + Volume + Candle Patterns</li>
           <li>Live Dashboard Table</li>
           <li>All Alert Conditions</li>
           <li>🔮 Ghost Pattern Forecast</li>
@@ -854,24 +855,6 @@ footer{max-width:1100px;margin:0 auto;padding:36px 24px;
           <li>Free future updates</li>
         </ul>
         <button class="plan-btn primary" onclick="goBuy('pro',30)">Get ScalpMaster Pro →</button>
-      </div>
-
-      <!-- ELITE -->
-      <div class="plan">
-        <div class="plan-name">ELITE</div>
-        <div class="plan-desc">For serious traders</div>
-        <div class="plan-price">$54</div>
-        <div class="plan-was">$179</div>
-        <div class="plan-billing">ONE-TIME · LIFETIME ACCESS</div>
-        <ul class="plan-feats">
-          <li>Everything in Pro</li>
-          <li>⚡ Priority Setup Support</li>
-          <li>📞 1-on-1 Onboarding Call</li>
-          <li>📘 Strategy Playbook PDF</li>
-          <li>🎓 Private Discord Access</li>
-          <li>🔄 All future indicators</li>
-        </ul>
-        <button class="plan-btn outline" onclick="goBuy('elite',54)">Buy Elite →</button>
       </div>
 
     </div>
@@ -1012,7 +995,7 @@ document.querySelectorAll('.step, .feat, .plan').forEach(el => io.observe(el))
 @keyframes priceFlash{0%,100%{color:var(--green)}50%{color:#00ff88}}
 
 /* Ticker enhanced */
-.ticker-inner{animation:tick 22s linear infinite!important}
+.ticker-inner{animation:tick 38s linear infinite!important}
 
 /* Scroll reveal */
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
