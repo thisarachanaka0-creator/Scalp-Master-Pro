@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9PYFPGHD8L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-9PYFPGHD8L');
+</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Checkout — ScalpMaster Pro</title>
@@ -809,6 +817,16 @@ function submitOrder() {
     })
   }).catch(()=>{})
 
+  // GA4 Purchase Event
+  if(typeof gtag !== 'undefined') {
+    gtag('event', 'purchase', {
+      transaction_id: document.getElementById('tx-hash').value.trim().substring(0,20),
+      value: state.price,
+      currency: 'USD',
+      items: [{item_name: 'ScalpMaster Pro ' + PLANS[state.plan].name, price: state.price}]
+    })
+  }
+
   // Show success after delay
   setTimeout(() => {
     clearInterval(timerInterval)
@@ -836,6 +854,17 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   }
 })
+</script>
+
+<script>
+// Track checkout page view
+if(typeof gtag !== 'undefined') {
+  gtag('event', 'begin_checkout', {
+    currency: 'USD',
+    value: 30,
+    items: [{item_name: 'ScalpMaster Pro', price: 30}]
+  });
+}
 </script>
 </body>
 </html>
