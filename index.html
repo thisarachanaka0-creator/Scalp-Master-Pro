@@ -1057,16 +1057,140 @@ nav{animation:navSlide .5s ease forwards}
 
 <!-- FOOTER -->
 <div class="footer-wrap">
-  <footer>
-    <span class="logo" style="font-size:1.4rem">ScalpMaster</span>
-    <ul class="footer-links">
-      <li><a href="terms.html">Terms of Service</a></li>
-      <li><a href="privacy.html">Privacy Policy</a></li>
-      <li><a href="refund.html">Refund Policy</a></li>
+  <!-- Footer CSS -->
+  <style>
+  .footer-main{max-width:1100px;margin:0 auto;padding:60px 24px 40px;
+    display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
+  .footer-brand .logo{font-size:1.6rem;display:block;margin-bottom:12px}
+  .footer-brand p{font-size:.82rem;color:var(--muted);line-height:1.7;max-width:260px;margin-bottom:16px}
+  .footer-social{display:flex;gap:10px;margin-top:4px}
+  .social-btn{border:1px solid var(--border);border-radius:8px;padding:7px 14px;
+    color:var(--muted);font-size:.75rem;font-family:var(--font-mono);text-decoration:none;
+    transition:all .2s;letter-spacing:.5px}
+  .social-btn:hover{border-color:var(--green);color:var(--green)}
+  .footer-col h4{font-family:var(--font-mono);font-size:.68rem;color:var(--green);
+    letter-spacing:2px;margin-bottom:16px}
+  .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+  .footer-col ul li a{color:var(--muted);text-decoration:none;font-size:.82rem;
+    transition:color .2s;display:flex;align-items:center;gap:6px}
+  .footer-col ul li a:hover{color:var(--text)}
+  .footer-col ul li a::before{content:'→';color:var(--border);font-size:.7rem;transition:color .2s}
+  .footer-col ul li a:hover::before{color:var(--green)}
+  .footer-features li{display:flex;align-items:flex-start;gap:6px;margin-bottom:8px}
+  .footer-features li span{font-size:.78rem;color:var(--muted);line-height:1.5}
+  .footer-features li::before{content:'✓';color:var(--green);font-size:.72rem;flex-shrink:0;margin-top:2px}
+  .footer-divider{border:none;border-top:1px solid var(--border);margin:0}
+  .footer-bottom{max-width:1100px;margin:0 auto;padding:20px 24px;
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  .footer-copy{font-family:var(--font-mono);font-size:.7rem;color:var(--muted)}
+  .footer-bottom-links{display:flex;gap:20px;list-style:none}
+  .footer-bottom-links a{color:var(--muted);text-decoration:none;font-size:.72rem;
+    font-family:var(--font-mono);transition:color .2s}
+  .footer-bottom-links a:hover{color:var(--green)}
+  .footer-badge{display:inline-flex;align-items:center;gap:6px;
+    background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.15);
+    border-radius:8px;padding:8px 14px;margin-top:16px}
+  .footer-badge span{font-size:.72rem;color:var(--muted);font-family:var(--font-mono)}
+  @media(max-width:768px){
+    .footer-main{grid-template-columns:1fr 1fr;gap:32px}
+    .footer-brand{grid-column:1/-1}
+    .footer-bottom{flex-direction:column;text-align:center}
+    .footer-bottom-links{justify-content:center;flex-wrap:wrap}
+  }
+  @media(max-width:480px){
+    .footer-main{grid-template-columns:1fr}
+  }
+  </style>
+
+  <hr class="footer-divider"/>
+
+  <div class="footer-main">
+
+    <!-- BRAND COL -->
+    <div class="footer-brand">
+      <span class="logo">ScalpMaster</span>
+      <p>Professional confluence trading indicator for TradingView. Built for scalpers and intraday traders who want clear signals backed by 7-factor analysis.</p>
+      <div class="footer-badge">
+        <span style="color:var(--green);font-size:.8rem">✓</span>
+        <span>TradingView Indicator · Invite Only</span>
+      </div>
+      <div class="footer-badge" style="margin-left:8px">
+        <span style="color:var(--gold);font-size:.8rem">★</span>
+        <span>USDT · Lifetime Access · No Subscription</span>
+      </div>
+    </div>
+
+    <!-- INDICATOR COL -->
+    <div class="footer-col">
+      <h4>INDICATOR</h4>
+      <ul class="footer-features">
+        <li><span>7-Factor Scoring Engine</span></li>
+        <li><span>Pivot Points P/R1-R3/S1-S3</span></li>
+        <li><span>RSI + Divergence</span></li>
+        <li><span>MACD Confluence</span></li>
+        <li><span>Volume Spike Filter</span></li>
+        <li><span>Ghost Pattern Forecast</span></li>
+        <li><span>Auto SL / TP1 / TP2</span></li>
+        <li><span>Live Dashboard Table</span></li>
+        <li><span>No Repainting</span></li>
+      </ul>
+    </div>
+
+    <!-- MARKETS COL -->
+    <div class="footer-col">
+      <h4>WORKS ON</h4>
+      <ul class="footer-features">
+        <li><span>Crypto (BTC, ETH, SOL...)</span></li>
+        <li><span>Forex (EUR/USD, GBP/USD...)</span></li>
+        <li><span>Stocks & Indices</span></li>
+        <li><span>Commodities (Gold, Oil...)</span></li>
+        <li><span>1m to Daily timeframes</span></li>
+        <li><span>Free TradingView account</span></li>
+      </ul>
+      <h4 style="margin-top:20px">LINKS</h4>
+      <ul>
+        <li><a href="checkout.html">Get Access — $30</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+
+    <!-- LEGAL COL -->
+    <div class="footer-col">
+      <h4>LEGAL</h4>
+      <ul>
+        <li><a href="terms.html">Terms of Service</a></li>
+        <li><a href="privacy.html">Privacy Policy</a></li>
+        <li><a href="refund.html">Refund Policy</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <h4 style="margin-top:20px">SUPPORT</h4>
+      <ul>
+        <li><a href="contact.html">Help & Support</a></li>
+        <li><a href="#faq">Common Questions</a></li>
+        <li><a href="checkout.html">Track Your Order</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <hr class="footer-divider"/>
+
+  <!-- BOTTOM BAR -->
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 ScalpMaster Pro · All rights reserved · scalpmaster.online</div>
+    <ul class="footer-bottom-links">
+      <li><a href="terms.html">Terms</a></li>
+      <li><a href="privacy.html">Privacy</a></li>
+      <li><a href="refund.html">Refund</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
-    <div class="footer-copy">© 2026 ScalpMaster Pro · All rights reserved</div>
-  </footer>
+    <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--muted)">
+      ⚠️ Trading involves risk · Not financial advice
+    </div>
+  </div>
+
 </div>
 
 <script>
