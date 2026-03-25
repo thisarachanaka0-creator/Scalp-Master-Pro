@@ -1307,18 +1307,50 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(ticker) ticker.parentNode.insertBefore(cdBar, ticker)
 
   // Set countdown to midnight
-  function updateCD(){
-    const now = new Date()
-    const midnight = new Date()
-    midnight.setHours(23,59,59,999)
-    const diff = midnight - now
-    const h = Math.floor(diff/3600000)
-    const m = Math.floor((diff%3600000)/60000)
-    const s = Math.floor((diff%60000)/1000)
-    const pad = n=>String(n).padStart(2,'0')
-    document.getElementById('cdH').textContent = pad(h)
-    document.getElementById('cdM').textContent = pad(m)
-    document.getElementById('cdS').textContent = pad(s)
+  // ── 7-day sale countdown — stored in localStorage so it persists ──
+  var SALE_KEY = 'sm_sale_end'
+  var saleEnd
+  var stored = null
+  try { stored = localStorage.getItem(SALE_KEY) } catch(e) {}
+  if (stored && !isNaN(parseInt(stored))) {
+    saleEnd = new Date(parseInt(stored))
+    if (saleEnd < new Date()) {
+      // Expired — reset to 7 more days
+      saleEnd = new Date(Date.now() + 7 * 24 * 3600 * 1000)
+      try { localStorage.setItem(SALE_KEY, saleEnd.getTime()) } catch(e) {}
+    }
+  } else {
+    saleEnd = new Date(Date.now() + 7 * 24 * 3600 * 1000)
+    try { localStorage.setItem(SALE_KEY, saleEnd.getTime()) } catch(e) {}
+  }
+
+  function updateCD() {
+    var now = new Date()
+    var diff = saleEnd - now
+    if (diff < 0) diff = 0
+
+    var totalSecs = Math.floor(diff / 1000)
+    var days  = Math.floor(totalSecs / 86400)
+    var hours = Math.floor((totalSecs % 86400) / 3600)
+    var mins  = Math.floor((totalSecs % 3600) / 60)
+    var secs  = totalSecs % 60
+
+    function pad(n) { return String(n).padStart(2,'0') }
+
+    var dEl = document.getElementById('cdD')
+    var hEl = document.getElementById('cdH')
+    var mEl = document.getElementById('cdM')
+    var sEl = document.getElementById('cdS')
+
+    if (dEl) dEl.textContent = pad(days)
+    if (hEl) hEl.textContent = pad(hours)
+    if (mEl) mEl.textContent = pad(mins)
+    if (sEl) sEl.textContent = pad(secs)
+
+    // Urgent color when under 1 hour
+    if (diff < 3600000) {
+      ;[dEl,hEl,mEl,sEl].forEach(function(el){ if(el) el.style.color = 'var(--red)' })
+    }
   }
   updateCD()
   setInterval(updateCD, 1000)
