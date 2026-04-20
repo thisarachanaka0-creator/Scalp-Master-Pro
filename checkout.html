@@ -580,30 +580,25 @@ const WALLETS = {
 // ════════════════════
 const PLANS = {
   starter: {
-    name:'STARTER', desc:'Perfect to get started', price:15, was:49,
-    feats:['All 7-factor confluence signals','Pivot Points P / R1–R3 / S1–S3',
-      'RSI + Divergence Detection','MACD + Volume + Candle Patterns',
-      'Live Dashboard Table','Basic Alert Conditions']
+    name:'STARTER', desc:'Choose 1 Indicator', price:15, was:49,
+    feats:['ScalpMaster Pro OR Trend X (pick 1)','All core signals & alerts','Pivot Points P / R1–R3 / S1–S3','RSI + Divergence + MACD','Lifetime access, no subscription','3-Day Money-Back Guarantee']
   },
   pro: {
-    name:'PRO', desc:'Everything you need to trade with edge', price:30, was:99,
-    feats:['All 7-factor confluence signals','Pivot Points P / R1–R3 / S1–S3',
-      'RSI + Divergence Detection','MACD + Volume + Candle Patterns',
-      '🔮 Ghost Pattern Forecast','🎯 Auto SL / TP1 / TP2 Lines',
-      '📊 Probability % Table','🔔 All Alert Conditions','Free future updates']
+    name:'PRO', desc:'Both Indicators — Limited Promo', price:30, was:99,
+    feats:['ScalpMaster Pro + Trend X (both)','🔮 Ghost Pattern Forecast','🎯 Auto SL/TP with 3 targets','📊 Live Dashboard & Probability','🔔 All Alert Conditions','Free future updates + 3-Day Guarantee']
   },
-  elite: {
-    name:'ELITE', desc:'For serious traders', price:179, was:699,
-    feats:['Everything in Pro','⚡ Priority Setup Support',
-      '📞 1-on-1 Onboarding Call','📘 Strategy Playbook PDF',
-      '🎓 Private Discord Access','🔄 All future indicators']
+  ultimate: {
+    name:'ULTIMATE', desc:'Both + Personal 1-on-1 Guide', price:54, was:179,
+    feats:['Everything in Pro (both indicators)','👨‍🏫 Personal 1-on-1 guide session','⚡ Priority setup & strategy walkthrough','📞 VIP Telegram support','🔄 Lifetime updates','3-Day Money-Back Guarantee']
   }
 }
+
 
 // ════════════════════
 // STATE
 // ════════════════════
-let state = { plan:'pro', price:99, network:'TRC20', step:1 }
+let state = { plan:'pro', price:30, network:'TRC20', step:1 }
+let promotionActive = true
 let timerInterval = null
 
 // ════════════════════
@@ -620,16 +615,37 @@ window.addEventListener('DOMContentLoaded', () => {
 // ════════════════════
 function setPlan(id) {
   state.plan = id
-  state.price = PLANS[id].price
+  // Check promotion
+  const now = new Date()
+  const promoEnd = new Date()
+  promoEnd.setHours(23,59,59,999) // ends tonight midnight
+  promotionActive = now < promoEnd
+  
   const p = PLANS[id]
+  state.price = promotionActive ? p.price : p.was
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
   document.getElementById('tab-'+id).classList.add('active')
   document.getElementById('pc-name').textContent = p.name
   document.getElementById('pc-desc').textContent = p.desc
-  document.getElementById('pc-price').textContent = '$'+p.price
-  document.getElementById('pc-was').textContent = '$'+p.was
+  document.getElementById('pc-price').textContent = '$'+state.price
+  document.getElementById('pc-was').textContent = promotionActive ? '$'+p.was : ''
   document.getElementById('pc-feats').innerHTML = p.feats.map(function(f){return '<li>'+f+'</li>'}).join('')
-  updateAmounts()
+  
+  // Update 70% badge
+  const saveAmt = p.was - p.price
+  const pct = Math.round((saveAmt/p.was)*100)
+  const tag = document.getElementById('pc-tag2')
+  if(tag){
+    if(promotionActive){
+      tag.style.display='inline-block'
+      tag.textContent = '🔥 '+pct+'% OFF — SAVE $'+saveAmt
+    } else {
+      tag.style.display='none'
+    }
+  }
+  // Update crypto amount display
+  const usdtEl = document.getElementById('crypto-amount')
+  if(usdtEl) usdtEl.textContent = state.price.toFixed(2)
 }
 
 // ════════════════════
