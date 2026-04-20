@@ -340,8 +340,14 @@ footer{max-width:980px;margin:0 auto;padding:28px 20px;
 
 <!-- PLAN TABS -->
 <div class="plan-tabs">
-  <button class="tab-btn active" id="tab-pro" onclick="setPlan('pro')" style="cursor:default;font-size:.85rem;padding:12px 32px">
-    ScalpMaster Pro — $30 <span class="tbadge">LIFETIME</span>
+  <button class="tab-btn" id="tab-starter" onclick="setPlan('starter')">
+    STARTER — $15
+  </button>
+  <button class="tab-btn active" id="tab-pro" onclick="setPlan('pro')">
+    PRO — $30 <span class="tbadge">BEST VALUE</span>
+  </button>
+  <button class="tab-btn" id="tab-ultimate" onclick="setPlan('ultimate')">
+    ULTIMATE — $54
   </button>
 </div>
 
@@ -628,7 +634,8 @@ function setPlan(id) {
   document.getElementById('pc-name').textContent = p.name
   document.getElementById('pc-desc').textContent = p.desc
   document.getElementById('pc-price').textContent = '$'+state.price
-  document.getElementById('pc-was').textContent = promotionActive ? '$'+p.was : ''
+  document.getElementById('pc-was').textContent = promotionActive ? '$'+p.was : '$'+p.was
+  document.getElementById('pc-was').style.textDecoration = promotionActive ? 'line-through' : 'none'
   document.getElementById('pc-feats').innerHTML = p.feats.map(function(f){return '<li>'+f+'</li>'}).join('')
   
   // Update 70% badge
