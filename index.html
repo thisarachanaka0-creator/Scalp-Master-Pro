@@ -1,581 +1,815 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Checkout — ScalpMaster Pro</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-  * { font-family: 'Outfit', sans-serif; }
-  body { background: #050a0f; }
-  .glass {
-    background: rgba(255,255,255,0.035);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.08);
-  }
-  .glass-strong {
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255,255,255,0.12);
-  }
-  .glow-emerald { box-shadow: 0 0 60px rgba(0,230,118,0.18), inset 0 1px 0 rgba(255,255,255,0.05); }
-  .tab-active {
-    background: linear-gradient(135deg, #00e676 0%, #00bcd4 100%);
-    color: #00140a;
-    font-weight: 600;
-  }
-  @keyframes pulse-soft { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.9; transform: scale(1.02); } }
-  .pulse { animation: pulse-soft 2s infinite; }
-  .step-num {
-    background: linear-gradient(135deg, rgba(0,230,118,0.2), rgba(0,188,212,0.2));
-    border: 1px solid rgba(0,230,118,0.3);
-  }
-  input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #0a121a inset !important; -webkit-text-fill-color: white !important; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ScalpMaster Pro — 7-Factor TradingView Indicator | Lifetime Access</title>
+  <meta name="description" content="ScalpMaster Pro: 7-Factor Confluence Engine for TradingView. Pivot Points, RSI Divergence, MACD, Volume Spikes, Ghost Pattern Forecasting & Auto SL/TP. No repaint.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9PYFPGHD8L"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-9PYFPGHD8L');
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'system-ui', 'sans-serif'],
+            display: ['Bebas Neue', 'sans-serif'],
+            mono: ['DM Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      background: radial-gradient(1200px 800px at 50% -10%, #0f2133 0%, transparent 60%), linear-gradient(180deg, #050a0f 0%, #0b1520 100%);
+      font-family: 'Outfit', system-ui, sans-serif;
+    }
+    .grid-bg {
+      background-image: 
+        linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+    .glass {
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .glass-strong {
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      background: rgba(5,10,15,0.75);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .glow-emerald { box-shadow: 0 0 40px rgba(0,230,118,0.15), inset 0 1px 0 rgba(255,255,255,0.05); }
+    .glow-cyan { box-shadow: 0 0 40px rgba(0,188,212,0.15), inset 0 1px 0 rgba(255,255,255,0.05); }
+    .text-glow { text-shadow: 0 0 30px rgba(0,230,118,0.35); }
+    .animate-marquee { animation: marquee 50s linear infinite; }
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .reveal { opacity: 0; transform: translateY(20px); transition: all .8s cubic-bezier(.2,.8,.2,1); }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+    .price-gradient {
+      background: linear-gradient(90deg, #00e676, #00bcd4);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+  </style>
 </head>
-<body class="text-white antialiased selection:bg-emerald-500/30 selection:text-emerald-200">
-<!-- Background -->
-<div class="fixed inset-0 -z-10 overflow-hidden">
-  <div class="absolute inset-0 bg-[#050a0f]"></div>
-  <div class="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-emerald-500/10 blur-[120px]"></div>
-  <div class="absolute -bottom-40 -left-40 w-[600px] h-[600px] rounded-full bg-cyan-500/10 blur-[120px]"></div>
-  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-emerald-500/[0.03] blur-[100px]"></div>
-</div>
+<body class="text-white antialiased selection:bg-[#00e676]/30 selection:text-white">
+  <canvas id="particles" class="fixed inset-0 w-full h-full pointer-events-none opacity-[0.15] z-0"></canvas>
+  <div class="fixed inset-0 grid-bg pointer-events-none z-0"></div>
 
-<!-- Nav -->
-<nav class="sticky top-0 z-40 border-b border-white/5 bg-[#050a0f]/70 backdrop-blur-xl">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-[68px] flex items-center justify-between">
-    <a href="/" class="flex items-center gap-3 group">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center glow-emerald group-hover:scale-105 transition">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="text-black">
-          <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <span class="text-[17px] font-semibold tracking-tight">ScalpMaster <span class="text-white/60">Pro</span></span>
-    </a>
-    <div class="flex items-center gap-2 text-[13px]">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-emerald-400"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      <span class="text-white/70 hidden sm:inline">Secure Checkout</span>
-      <span class="text-white/70 sm:hidden">Secure</span>
-    </div>
-  </div>
-</nav>
-
-<main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 lg:py-12">
-  <!-- Header -->
-  <div class="text-center max-w-3xl mx-auto mb-8">
-    <div class="inline-flex items-center gap-2.5 mb-5">
-      <div id="badge-70" class="pulse relative inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border-emerald-400/30">
-        <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span></span>
-        <span class="text-[13px] font-semibold tracking-wide text-emerald-300">70% OFF TODAY</span>
-      </div>
-      <div id="badge-ended" class="hidden items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10">
-        <span class="text-[13px] font-medium text-white/60">Promotion Ended</span>
-      </div>
-    </div>
-    <h1 class="text-[32px] sm:text-[42px] lg:text-[52px] font-bold tracking-tight leading-[1.1]">
-      Complete Your Order
-    </h1>
-    <p class="mt-3 text-[16px] sm:text-[18px] text-white/60">One-time payment. Lifetime access. No subscriptions.</p>
-  </div>
-
-  <!-- Countdown -->
-  <div class="max-w-3xl mx-auto mb-10">
-    <div class="glass rounded-2xl px-5 py-3.5 flex items-center justify-center gap-3">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-      <span class="text-[14px] text-white/70">Special launch pricing ends in</span>
-      <div id="countdown" class="font-mono text-[20px] font-semibold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 tabular-nums">00:00:00</div>
+  <!-- Sale Bar -->
+  <div class="relative z-50 border-b border-amber-400/20 bg-[linear-gradient(90deg,rgba(255,23,68,0.15),rgba(255,214,0,0.15),rgba(0,230,118,0.15))]">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-center gap-3 text-[13px] sm:text-sm">
+      <span class="hidden sm:inline-flex items-center gap-1.5 font-medium tracking-wide text-amber-100/90">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        FLASH SALE: 70% OFF TODAY ONLY
+      </span>
+      <span class="sm:hidden font-medium">🔥 70% OFF TODAY</span>
+      <span class="text-white/60">—</span>
+      <span class="flex items-center gap-1.5 font-mono text-[#ffd600]">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span id="top-countdown">00:00:00</span>
+      </span>
+      <span class="hidden md:inline text-white/50">Prices increase at midnight</span>
     </div>
   </div>
 
-  <div class="grid lg:grid-cols-12 gap-6 lg:gap-8 items-start max-w-6xl mx-auto">
-    <!-- LEFT -->
-    <div class="lg:col-span-5 space-y-6">
-      <div class="glass-strong rounded-[28px] p-6 sm:p-8">
-        <div class="flex items-center justify-between mb-5">
-          <h2 class="text-[18px] font-semibold">Order Summary</h2>
-          <div class="flex items-center gap-1.5 text-[12px] text-white/50">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            SSL Secured
-          </div>
+  <!-- Nav -->
+  <nav class="sticky top-0 z-40 border-b border-white/5 bg-[#050a0f]/70 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[68px] flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00e676] to-[#00bcd4] flex items-center justify-center shadow-lg shadow-emerald-500/20">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
         </div>
-
-        <!-- Plan Tabs -->
-        <div class="grid grid-cols-3 gap-2 p-1 mb-6 bg-black/30 rounded-2xl border border-white/5">
-          <button data-plan="starter" class="plan-tab px-3 py-2.5 rounded-xl text-[13px] font-medium text-white/70 hover:text-white transition">Starter</button>
-          <button data-plan="pro" class="plan-tab px-3 py-2.5 rounded-xl text-[13px] font-medium text-white/70 hover:text-white transition tab-active">Pro</button>
-          <button data-plan="ultimate" class="plan-tab px-3 py-2.5 rounded-xl text-[13px] font-medium text-white/70 hover:text-white transition">Ultimate</button>
-        </div>
-
-        <div class="mb-6">
-          <h3 id="plan-name" class="text-[22px] font-bold leading-tight">Pro - Both Indicators</h3>
-          <p class="text-[13px] text-white/50 mt-1">Lifetime license • Instant delivery</p>
-        </div>
-
-        <!-- Price Box -->
-        <div class="relative overflow-hidden rounded-[20px] border border-emerald-500/20 bg-gradient-to-b from-emerald-500/[0.08] to-cyan-500/[0.05] p-[1px]">
-          <div class="rounded-[19px] bg-[#0a1218]/90 px-6 py-5">
-            <div class="flex items-end gap-3 flex-wrap">
-              <div id="price-current" class="text-[48px] font-extrabold tracking-tight leading-none bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">$30</div>
-              <div id="price-original-wrap" class="mb-1.5">
-                <div id="price-original" class="text-[22px] font-medium text-white/30 line-through">$99</div>
-              </div>
-            </div>
-            <div id="save-row" class="mt-3 flex items-center gap-2">
-              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/25">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-emerald-400"><path d="M20 6L9 17l-5-5"/></svg>
-                <span id="save-text" class="text-[13px] font-semibold text-emerald-300">You save $69 (70% OFF)</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Features -->
-        <div class="mt-7">
-          <div class="text-[12px] uppercase tracking-wider font-semibold text-white/40 mb-3">What's Included</div>
-          <ul id="features-list" class="space-y-2.5">
-            <!-- JS injected -->
-          </ul>
-        </div>
-
-        <!-- Guarantee -->
-        <div class="mt-7 p-4 rounded-2xl bg-gradient-to-r from-cyan-500/10 to-emerald-500/10 border border-cyan-500/20 flex gap-3">
-          <div class="shrink-0 w-10 h-10 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400"><path d="M9 12l2 2 4-4"/><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          <div>
-            <div class="text-[14px] font-semibold leading-tight">3-Day Money-Back Guarantee</div>
-            <div class="text-[13px] text-white/60 mt-0.5 leading-snug">Not profitable? Get a full refund. No questions.</div>
-          </div>
-        </div>
+        <span class="text-[22px] font-semibold tracking-tight">ScalpMaster<span class="text-white/50 font-light ml-1">PRO</span></span>
+      </a>
+      <div class="hidden md:flex items-center gap-8 text-[14px] text-white/70">
+        <a href="#features" class="hover:text-white transition">Features</a>
+        <a href="#how" class="hover:text-white transition">How It Works</a>
+        <a href="#indicators" class="hover:text-white transition">Indicators</a>
+        <a href="#pricing" class="hover:text-white transition">Pricing</a>
+        <a href="#faq" class="hover:text-white transition">FAQ</a>
       </div>
-
-      <!-- Trust -->
-      <div class="glass rounded-[24px] p-5">
-        <div class="grid grid-cols-3 gap-4">
-          <div class="text-center">
-            <div class="w-8 h-8 mx-auto rounded-lg bg-white/5 border border-white/10 flex items-center justify-center mb-2">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-emerald-400"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M12 12h6"/></svg>
-            </div>
-            <div class="text-[11px] leading-tight text-white/70">Secure USDT<br>TRC20 / ERC20</div>
-          </div>
-          <div class="text-center">
-            <div class="w-8 h-8 mx-auto rounded-lg bg-white/5 border border-white/10 flex items-center justify-center mb-2">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400"><path d="M18 8A6 6 0 0 0 6 8c0 7 3 9 6 9s6-2 6-9z"/><path d="M10 2h4"/></svg>
-            </div>
-            <div class="text-[11px] leading-tight text-white/70">No Monthly Fees<br>Lifetime</div>
-          </div>
-          <div class="text-center">
-            <div class="w-8 h-8 mx-auto rounded-lg bg-white/5 border border-white/10 flex items-center justify-center mb-2">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-emerald-400"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            </div>
-            <div class="text-[11px] leading-tight text-white/70">Trusted by<br>120+ traders</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- RIGHT -->
-    <div class="lg:col-span-7">
-      <form id="checkout-form" class="glass-strong rounded-[28px] p-6 sm:p-8">
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-[20px] font-bold">Payment Details</h2>
-          <div class="text-[12px] px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-white/60">Step <span id="step-num">1</span> of 4</div>
-        </div>
-
-        <!-- Step 1 -->
-        <div class="space-y-5">
-          <div>
-            <div class="flex items-center gap-2.5 mb-3">
-              <div class="step-num w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold text-emerald-300">1</div>
-              <label class="text-[14px] font-medium">TradingView Username</label>
-            </div>
-            <div class="relative">
-              <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40">@</span>
-              <input id="tv-username" required type="text" placeholder="your_username" class="w-full h-[48px] pl-8 pr-4 rounded-xl bg-black/40 border border-white/10 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 text-[15px] transition placeholder:text-white/30">
-            </div>
-            <p class="text-[12px] text-white/45 mt-1.5">We'll invite this account to the private indicator</p>
-          </div>
-
-          <!-- Step 2 -->
-          <div>
-            <div class="flex items-center gap-2.5 mb-3">
-              <div class="step-num w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold text-emerald-300">2</div>
-              <label class="text-[14px] font-medium">Email Address</label>
-            </div>
-            <input id="email" required type="email" placeholder="you@email.com" class="w-full h-[48px] px-4 rounded-xl bg-black/40 border border-white/10 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 text-[15px] transition placeholder:text-white/30">
-          </div>
-
-          <!-- Step 3 -->
-          <div>
-            <div class="flex items-center gap-2.5 mb-3">
-              <div class="step-num w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold text-emerald-300">3</div>
-              <label class="text-[14px] font-medium">Choose USDT Network</label>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-              <button type="button" data-network="TRC20" class="network-btn relative group p-[1px] rounded-xl bg-gradient-to-b from-emerald-500/50 to-cyan-500/50">
-                <div class="bg-[#0b131c] rounded-[11px] p-3.5 h-full">
-                  <div class="flex items-center justify-between">
-                    <div class="text-left">
-                      <div class="text-[15px] font-semibold">TRC20</div>
-                      <div class="text-[12px] text-white/50">Tron Network</div>
-                    </div>
-                    <div class="w-5 h-5 rounded-full border-2 border-emerald-400 bg-emerald-400/20 flex items-center justify-center">
-                      <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
-                    </div>
-                  <div class="mt-2 inline-flex px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-500/15 text-emerald-300 border border-emerald-500/20">Recommended • Low fee</div>
-                </div>
-              </button>
-              <button type="button" data-network="ERC20" class="network-btn p-[1px] rounded-xl bg-white/10 hover:bg-white/15 transition">
-                <div class="bg-[#0b131c] rounded-[11px] p-3.5 h-full">
-                  <div class="flex items-center justify-between">
-                    <div class="text-left">
-                      <div class="text-[15px] font-semibold">ERC20</div>
-                      <div class="text-[12px] text-white/50">Ethereum</div>
-                    </div>
-                    <div class="w-5 h-5 rounded-full border-2 border-white/20"></div>
-                  </div>
-                  <div class="mt-2 inline-flex px-2 py-0.5 rounded text-[10px] font-medium bg-white/5 text-white/50 border border-white/10">Higher gas</div>
-                </div>
-              </button>
-            </div>
-
-            <!-- Wallet -->
-            <div class="mt-4 grid sm:grid-cols-[1fr_auto] gap-4 items-start p-4 rounded-2xl bg-black/40 border border-white/10">
-              <div class="min-w-0">
-                <div class="text-[11px] uppercase tracking-wide text-white/40 mb-1.5">Send exact amount to:</div>
-                <div class="flex items-center gap-2">
-                  <code id="wallet-address" class="text-[14px] font-mono text-emerald-300 break-all">TXYZabc123456789TRC20xyz123</code>
-                  <button type="button" id="copy-btn" class="shrink-0 h-8 px-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[12px] font-medium transition active:scale-95">Copy</button>
-                </div>
-                <div class="mt-2.5 flex items-center gap-3 text-[12px]">
-                  <div class="flex items-center gap-1 text-white/50"><div class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div> Waiting for payment</div>
-                  <div class="text-white/30">•</div>
-                  <div class="text-white/50">Amount: <span id="pay-amount" class="text-white font-medium">$30 USDT</span></div>
-                </div>
-              </div>
-              <div class="sm:text-center">
-                <div class="w-[110px] h-[110px] mx-auto rounded-xl bg-[#050a0f] border border-white/10 flex items-center justify-center relative overflow-hidden">
-                  <svg width="70" height="70" viewBox="0 0 120 120" class="opacity-80">
-                    <rect x="0" y="0" width="120" height="120" fill="#050a0f"/>
-                    <g fill="#00e676">
-                      <rect x="10" y="10" width="28" height="28"/><rect x="14" y="14" width="20" height="20" fill="#050a0f"/><rect x="18" y="18" width="12" height="12" fill="#00e676"/>
-                      <rect x="82" y="10" width="28" height="28"/><rect x="86" y="14" width="20" height="20" fill="#050a0f"/><rect x="90" y="18" width="12" height="12" fill="#00e676"/>
-                      <rect x="10" y="82" width="28" height="28"/><rect x="14" y="86" width="20" height="20" fill="#050a0f"/><rect x="18" y="90" width="12" height="12" fill="#00e676"/>
-                      <rect x="46" y="10" width="8" height="8"/><rect x="62" y="10" width="8" height="8"/><rect x="46" y="26" width="8" height="8"/>
-                      <rect x="54" y="46" width="8" height="8"/><rect x="70" y="46" width="8" height="8"/><rect x="46" y="62" width="24" height="8"/>
-                      <rect x="82" y="54" width="8" height="16"/><rect x="98" y="46" width="8" height="24"/>
-                    </g>
-                  </svg>
-                  <div class="absolute inset-0 bg-gradient-to-tr from-emerald-500/10 to-cyan-500/10 mix-blend-overlay"></div>
-                </div>
-                <div class="text-[11px] text-white/40 mt-1.5">Scan to pay</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Step 4 -->
-          <div>
-            <div class="flex items-center gap-2.5 mb-3">
-              <div class="step-num w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold text-emerald-300">4</div>
-              <label class="text-[14px] font-medium">Transaction Hash (TXID)</label>
-            </div>
-            <input id="tx-hash" required type="text" placeholder="Paste your USDT transaction hash here" class="w-full h-[48px] px-4 rounded-xl bg-black/40 border border-white/10 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 text-[14px] font-mono transition placeholder:text-white/30">
-            <p class="text-[12px] text-white/45 mt-1.5">After sending, paste the hash so we can verify instantly</p>
-          </div>
-        </div>
-
-        <button type="submit" class="mt-7 w-full relative group">
-          <div class="absolute -inset-0.5 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-2xl blur-xl opacity-40 group-hover:opacity-60 transition"></div>
-          <div class="relative h-[54px] rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center gap-2.5 font-semibold text-[16px] text-black group-active:scale-[0.99] transition">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            I've Paid — Activate Access
-          </div>
+      <div class="flex items-center gap-3">
+        <a href="#pricing" class="hidden sm:inline-flex items-center gap-2 px-4 h-9 rounded-full bg-white/10 hover:bg-white/15 border border-white/10 text-sm font-medium transition">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#00e676] animate-pulse"></span>
+          Live
+        </a>
+        <a href="checkout.html?plan=pro" class="inline-flex items-center h-10 px-5 rounded-full bg-gradient-to-r from-[#00e676] to-[#00bcd4] text-black font-semibold text-[14px] shadow-lg shadow-emerald-900/30 hover:opacity-95 transition">
+          Get Access
+        </a>
+        <button id="menuBtn" class="md:hidden w-10 h-10 grid place-items-center rounded-lg bg-white/5 border border-white/10">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
-        
-        <div class="mt-4 flex items-center justify-center gap-2 text-[12px] text-white/50">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-          Access granted within 5–30 minutes after 1 confirmation
-        </div>
-      </form>
+      </div>
+    </div>
+    <div id="mobileMenu" class="md:hidden hidden border-t border-white/5 bg-[#050a0f]/95 backdrop-blur-xl">
+      <div class="px-4 py-3 flex-col gap-3 text-[15px]">
+        <a href="#features" class="py-2">Features</a>
+        <a href="#how" class="py-2">How It Works</a>
+        <a href="#indicators" class="py-2">Indicators</a>
+        <a href="#pricing" class="py-2">Pricing</a>
+        <a href="#faq" class="py-2">FAQ</a>
+      </div>
+    </div>
+  </nav>
 
-      <!-- FAQ -->
-      <div class="mt-6 grid sm:grid-cols-2 gap-3">
-        <div class="glass rounded-2xl p-4">
-          <div class="text-[13px] font-semibold mb-1 flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg> When do I get access?</div>
-          <p class="text-[13px] text-white/60 leading-snug">Right after payment confirms (5–30 min). We invite your TradingView username and email you the setup guide.</p>
+  <!-- Live Ticker -->
+  <div class="relative z-30 border-y border-white/[0.06] bg-black/20 backdrop-blur-md overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-[#050a0f] via-transparent to-[#050a0f] z-10 pointer-events-none"></div>
+    <div id="ticker" class="flex items-center gap-10 py-2.5 whitespace-nowrap will-change-transform animate-marquee font-mono text-[13px]">
+      <!-- JS fills -->
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="relative z-20 pt-16 sm:pt-24 pb-12 overflow-hidden">
+    <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full bg-[#00bcd4]/10 blur-[160px] pointer-events-none"></div>
+    <div class="absolute top-20 right-[10%] w-[400px] h-[400px] rounded-full bg-[#00e676]/10 blur-[120px] pointer-events-none"></div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div class="max-w-4xl mx-auto text-center">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-[11px] tracking-widest uppercase font-medium text-white/70 mb-6 reveal">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#00e676]"></span>
+          TRADINGVIEW INDICATOR • NO REPAINT • 7-FACTOR
         </div>
-        <div class="glass rounded-2xl p-4">
-          <div class="text-[13px] font-semibold mb-1 flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-emerald-400"><path d="M9 12l2 2 4-4"/><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> 3-day refund?</div>
-          <p class="text-[13px] text-white/60 leading-snug">Yes. If you don't get value in 3 days, reply to your receipt email. Instant refund, no questions.</p>
+        
+        <h1 class="font-display text-[68px] sm:text-[88px] lg:text-[120px] leading-[0.8] tracking-[-0.02em] reveal">
+          <span class="block text-white/90">SCALPMASTER</span>
+          <span class="block price-gradient text-glow">PRO</span>
+        </h1>
+        
+        <p class="mt-6 text-[18px] sm:text-[20px] leading-relaxed text-white/70 max-w-2xl mx-auto reveal" style="transition-delay: .1s">
+          7-Factor Confluence Engine — Pivot Points, RSI Divergence, MACD, Volume Spikes, Ghost Pattern Forecasting & Auto SL/TP. All in one indicator.
+        </p>
+
+        <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 reveal" style="transition-delay: .2s">
+          <a href="checkout.html?plan=pro" class="group relative w-full sm:w-auto inline-flex items-center justify-center gap-2 h-[52px] px-8 rounded-full bg-white text-black font-semibold text-[16px] transition hover:translate-y-[-1px]">
+            <span>Get Lifetime Access</span>
+            <svg class="transition group-hover:translate-x-0.5" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            <div class="absolute inset-0 rounded-full bg-gradient-to-r from-[#00e676] to-[#00bcd4] opacity-0 group-hover:opacity-100 blur-xl transition -z-10"></div>
+          </a>
+          <a href="#demo" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 h-[52px] px-7 rounded-full glass hover:bg-white/10 font-medium text-[15px] transition">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Watch Demo
+          </a>
+        </div>
+
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] text-white/60 reveal" style="transition-delay: .3s">
+          <div class="flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Secure USDT Payment</div>
+          <div class="flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Instant Access</div>
+          <div class="flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24" fill="none" stroke="#00e676" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg> No Subscription</div>
+                <div class="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] text-white/60 reveal" style="transition-delay: .3s">
+          <div class="flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Secure USDT Payment</div>
+          <div class="flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Instant Access</div>
+          <div class="flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg> No Subscription</div>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="mt-10 flex flex-wrap items-center justify-center gap-4 reveal" style="transition-delay:.4s">
+          <div class="flex items-center gap-2.5 px-4 h-11 rounded-xl glass border border-white/10">
+            <div class="w-7 h-7 rounded-lg bg-[#00e676]/15 grid place-items-center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            </div>
+            <div class="text-left">
+              <div class="text-[12px] font-medium leading-tight">Secure USDT</div>
+              <div class="text-[11px] text-white/50 leading-tight">TRC20 / ERC20</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2.5 px-4 h-11 rounded-xl glass border border-white/10">
+            <div class="w-7 h-7 rounded-lg bg-[#00bcd4]/15 grid place-items-center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00bcd4" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div class="text-left">
+              <div class="text-[12px] font-medium leading-tight">No Monthly Fees</div>
+              <div class="text-[11px] text-white/50 leading-tight">Pay once, own forever</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2.5 px-4 h-11 rounded-xl glass border border-white/10">
+            <div class="w-7 h-7 rounded-lg bg-[#ffd600]/15 grid place-items-center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffd600" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="text-left">
+              <div class="text-[12px] font-medium leading-tight">120+ Traders</div>
+              <div class="text-[11px] text-white/50 leading-tight">Active community</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="mt-16 sm:mt-20 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto">
+        <div class="glass rounded-2xl p-4 text-center reveal">
+          <div class="text-[26px] font-mono font-medium text-white">7</div>
+          <div class="text-[11px] uppercase tracking-widest text-white/50 mt-1">FACTORS</div>
+        </div>
+        <div class="glass rounded-2xl p-4 text-center reveal" style="transition-delay:.05s">
+          <div class="text-[26px] font-mono font-medium text-white">ALL</div>
+          <div class="text-[11px] uppercase tracking-widest text-white/50 mt-1">MARKETS</div>
+        </div>
+        <div class="glass rounded-2xl p-4 text-center reveal" style="transition-delay:.1s">
+          <div class="text-[26px] font-mono font-medium text-[#00e676]">AUTO</div>
+          <div class="text-[11px] uppercase tracking-widest text-white/50 mt-1">SL/TP</div>
+        </div>
+        <div class="glass rounded-2xl p-4 text-center reveal" style="transition-delay:.15s">
+          <div class="text-[26px] font-mono font-medium text-white">0</div>
+          <div class="text-[11px] uppercase tracking-widest text-white/50 mt-1">REPAINT</div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
+
+  <!-- Chart Preview -->
+  <section id="demo" class="relative z-20 -mt-2 pb-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="relative glass-strong rounded-[28px] p-2 sm:p-3 glow-emerald reveal">
+        <div class="relative rounded-[20px] overflow-hidden bg-[#070f18] border border-white/10">
+          <!-- Top bar -->
+          <div class="flex items-center justify-between px-4 h-11 border-b border-white/5 bg-white/[0.02]">
+            <div class="flex items-center gap-2">
+              <div class="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>
+              <span class="ml-3 text-[12px] font-mono text-white/50">BTCUSDT • 5m • Binance</span>
+            </div>
+            <div class="hidden sm:flex items-center gap-3 text-[11px] font-mono">
+              <span class="text-white/40">ScalpMaster Pro v3.2</span>
+              <span class="px-2 py-0.5 rounded bg-[#00e676]/20 text-[#00e676] border border-[#00e676]/30">ACTIVE</span>
+            </div>
+          </div>
+          
+          <!-- Chart SVG -->
+          <div class="relative aspect-[16/7] w-full">
+            <svg viewBox="0 0 1200 525" class="absolute inset-0 w-full h-full">
+              <defs>
+                <linearGradient id="g" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#00e676" stop-opacity="0.25"/>
+                  <stop offset="100%" stop-color="#00e676" stop-opacity="0"/>
+                </linearGradient>
+                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="3" result="b"/>
+                  <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              <rect width="1200" height="525" fill="#08131f"/>
+              <g stroke="rgba(255,255,255,0.06)" stroke-width="1">
+                <line x1="0" y1="105" x2="1200" y2="105"/><line x1="0" y1="210" x2="1200" y2="210"/><line x1="0" y1="315" x2="1200" y2="315"/><line x1="0" y1="420" x2="1200" y2="420"/>
+                <line x1="200" y1="0" x2="200" y2="525"/><line x1="400" y1="0" x2="400" y2="525"/><line x1="600" y1="0" x2="600" y2="525"/><line x1="800" y1="0" x2="800" y2="525"/><line x1="1000" y1="0" x2="1000" y2="525"/>
+              </g>
+              <path d="M0 330 C 80 325, 160 340, 240 310 S 360 270, 480 285 S 620 320, 720 265 S 880 210, 1000 245 S 1120 285, 1200 270" fill="none" stroke="#00e676" stroke-width="2.2" filter="url(#glow)"/>
+              <path d="M0 330 C 80 325, 160 340, 240 310 S 360 270, 480 285 S 620 320, 720 265 S 880 210, 1000 245 S 1120 285, 1200 270 L 1200 525 L 0 525 Z" fill="url(#g)"/>
+              <!-- Pivot lines -->
+              <g font-family="DM Mono" font-size="11">
+                <line x1="0" x2="1200" y1="180" y2="180" stroke="#ffd600" stroke-width="1.5" stroke-dasharray="5 5" opacity="0.9"/>
+                <rect x="14" y="162" width="90" height="16" rx="4" fill="#0b1520" stroke="#ffd600" stroke-opacity="0.5"/>
+                <text x="20" y="174" fill="#ffd600">R1 68,420</text>
+                <line x1="0" x2="1200" y1="250" y2="250" stroke="#00bcd4" stroke-width="1.5" stroke-dasharray="5 5" opacity="0.9"/>
+                <rect x="14" y="232" width="88" height="16" rx="4" fill="#0b1520" stroke="#00bcd4" stroke-opacity="0.5"/>
+                <text x="20" y="244" fill="#00bcd4">PIVOT 67,850</text>
+                <line x1="0" x2="1200" y1="330" y2="330" stroke="#ff1744" stroke-width="1.5" stroke-dasharray="5 5" opacity="0.9"/>
+                <rect x="14" y="312" width="88" height="16" rx="4" fill="#0b1520" stroke="#ff1744" stroke-opacity="0.5"/>
+                <text x="20" y="324" fill="#ff1744">S1 67,210</text>
+              </g>
+              <!-- Signals -->
+              <g filter="url(#glow)">
+                <g transform="translate(255,350)">
+                  <polygon points="0,0 26,0 13,20" fill="#00e676"/>
+                  <text x="13" y="-8" text-anchor="middle" fill="#00e676" font-family="DM Mono" font-size="12" font-weight="500">LONG</text>
+                </g>
+                <g transform="translate(495,225)">
+                  <polygon points="0,22 26,22 13,2" fill="#ff1744"/>
+                  <text x="13" y="40" text-anchor="middle" fill="#ff1744" font-family="DM Mono" font-size="12">SHORT</text>
+                </g>
+                <g transform="translate(715,235)">
+                  <polygon points="0,0 26,0 13,20" fill="#00e676"/>
+                  <text x="13" y="-8" text-anchor="middle" fill="#00e676" font-family="DM Mono" font-size="12">LONG</text>
+                </g>
+                <g transform="translate(1015,275)">
+                  <polygon points="0,0 26,0 13,20" fill="#00e676"/>
+                  <text x="13" y="-8" text-anchor="middle" fill="#00e676" font-family="DM Mono" font-size="12">LONG</text>
+                </g>
+              </g>
+              <!-- Ghost forecast -->
+              <path d="M900 245 C 960 230, 1020 215, 1080 225 S 1160 260, 1200 255" fill="none" stroke="#00bcd4" stroke-width="2" stroke-dasharray="3 4" opacity="0.7"/>
+              <text x="905" y="220" fill="#00bcd4" font-family="DM Mono" font-size="10" opacity="0.8">GHOST FORECAST</text>
+            </svg>
+            
+            <!-- Dashboard -->
+            <div class="absolute top-3 right-3 sm:top-4 sm:right-4 glass rounded-xl p-3 w-[210px] sm:w-[240px] border border-white/10">
+              <div class="flex items-center justify-between">
+                <div class="text-[12px] font-semibold tracking-wide">ScalpMaster PRO</div>
+                <div class="text-[10px] px-1.5 py-0.5 rounded bg-[#00e676]/15 text-[#00e676] border border-[#00e676]/20 font-mono">7-FACTOR</div>
+              </div>
+              <div class="mt-2.5 grid grid-cols-2 gap-x-3 gap-y-1.5 text-[11px] font-mono">
+                <div class="flex items-center gap-1.5"><span class="text-[#00e676]">✓</span><span class="text-white/70">Pivot</span></div>
+                <div class="flex items-center gap-1.5"><span class="text-[#00e676]">✓</span><span class="text-white/70">RSI Div</span></div>
+                <div class="flex items-center gap-1.5"><span class="text-[#00e676]">✓</span><span class="text-white/70">MACD</span></div>
+                <div class="flex items-center gap-1.5"><span class="text-[#00e676]">✓</span><span class="text-white/70">Volume</span></div>
+                <div class="flex items-center gap-1.5"><span class="text-[#00e676]">✓</span><span class="text-white/70">Pattern</span></div>
+                <div class="flex items-center gap-1.5"><span class="text-white/30">○</span><span class="text-white/40">Ghost</span></div>
+              </div>
+              <div class="mt-2.5 pt-2.5 border-t border-white/5 flex items-center justify-between">
+                <span class="text-[10px] uppercase tracking-widest text-white/40">Confluence</span>
+                <span class="text-[13px] font-mono font-medium text-[#00e676]">6/7 LONG</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="text-center text-[13px] text-white/50 mt-4">Real TradingView chart • Signals do not repaint • Works on crypto, forex, stocks, indices</p>
+    </div>
+  </section>
+
+  <!-- How it Works -->
+  <section id="how" class="relative z-20 py-20 border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl">
+        <h2 class="font-display text-[48px] sm:text-[64px] leading-none tracking-wide">HOW IT WORKS</h2>
+        <p class="mt-3 text-white/60">Four steps. No guesswork. Pure confluence.</p>
+      </div>
+      <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="group relative glass rounded-2xl p-[1px] overflow-hidden reveal">
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-gradient-to-b from-white/10 to-transparent"></div>
+          <div class="relative bg-[#0a131d]/80 rounded-[15px] p-6 h-full">
+            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 grid place-items-center mb-4">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00bcd4" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            </div>
+            <div class="text-[13px] font-mono text-white/40 mb-1">STEP 01</div>
+            <h3 class="text-[18px] font-semibold">Add to TradingView</h3>
+            <p class="mt-2 text-[14px] text-white/60 leading-relaxed">One-click invite. Works on free & paid TV accounts. Any market, any timeframe.</p>
+          </div>
+        </div>
+        <div class="group relative glass rounded-2xl p-[1px] overflow-hidden reveal" style="transition-delay:.05s">
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-gradient-to-b from-white/10 to-transparent"></div>
+          <div class="relative bg-[#0a131d]/80 rounded-[15px] p-6 h-full">
+            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 grid place-items-center mb-4">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffd600" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.2 4.2l4.2 4.2M15.6 15.6l4.2 4.2M1 12h6M17 12h6M4.2 19.8l4.2-4.2M15.6 8.4l4.2-4.2"/></svg>
+            </div>
+            <div class="text-[13px] font-mono text-white/40 mb-1">STEP 02</div>
+            <h3 class="text-[18px] font-semibold">Wait for Confluence</h3>
+            <p class="mt-2 text-[14px] text-white/60 leading-relaxed">Indicator scores 7 factors in real-time. Dashboard shows 5+/7 for high-probability setups.</p>
+          </div>
+        </div>
+        <div class="group relative glass rounded-2xl p-[1px] overflow-hidden reveal" style="transition-delay:.1s">
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-gradient-to-b from-white/10 to-transparent"></div>
+          <div class="relative bg-[#0a131d]/80 rounded-[15px] p-6 h-full">
+            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 grid place-items-center mb-4">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+            </div>
+            <div class="text-[13px] font-mono text-white/40 mb-1">STEP 03</div>
+            <h3 class="text-[18px] font-semibold">Enter on Signal</h3>
+            <p class="mt-2 text-[14px] text-white/60 leading-relaxed">Clear LONG/SHORT arrows. No repaint. Alerts fire only when all filters confirm.</p>
+          </div>
+        </div>
+        <div class="group relative glass rounded-2xl p-[1px] overflow-hidden reveal" style="transition-delay:.15s">
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-gradient-to-b from-white/10 to-transparent"></div>
+          <div class="relative bg-[#0a131d]/80 rounded-[15px] p-6 h-full">
+            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 grid place-items-center mb-4">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff1744" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="text-[13px] font-mono text-white/40 mb-1">STEP 04</div>
+            <h3 class="text-[18px] font-semibold">Auto SL/TP</h3>
+            <p class="mt-2 text-[14px] text-white/60 leading-relaxed">Stop-loss and 3 take-profits plot automatically based on volatility and pivots.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Indicators -->
+  <section id="indicators" class="relative z-20 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto reveal">
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#00bcd4]/10 border border-[#00bcd4]/20 text-[11px] font-medium tracking-wide text-[#00bcd4] mb-4">
+          2 PREMIUM INDICATORS
+        </div>
+        <h2 class="font-display text-[48px] sm:text-[56px] leading-[0.9]">CHOOSE YOUR EDGE</h2>
+        <p class="mt-4 text-[16px] text-white/65 leading-relaxed">We currently sell two battle-tested TradingView indicators. Pick one with Starter, or get both with Pro & Ultimate.</p>
+      </div>
+
+      <div class="mt-12 grid md:grid-cols-2 gap-5 max-w-5xl mx-auto">
+        <!-- Indicator 1 -->
+        <div class="group relative glass-strong rounded-[24px] p-[1px] overflow-hidden reveal">
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-gradient-to-b from-[#00e676]/20 to-transparent"></div>
+          <div class="relative rounded-[23px] bg-[#07111b]/90 p-7 h-full">
+            <div class="flex items-start justify-between">
+              <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00e676] to-[#00bcd4] grid place-items-center shadow-lg shadow-emerald-500/20">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+              </div>
+              <span class="text-[11px] px-2.5 py-1 rounded-full bg-[#00e676]/15 border border-[#00e676]/30 text-[#00e676] font-medium">MOST POPULAR</span>
+            </div>
+            <h3 class="mt-5 text-[26px] font-semibold">ScalpMaster Pro</h3>
+            <p class="text-[14px] text-white/60">7-Factor Confluence Engine</p>
+            <ul class="mt-5 space-y-2 text-[14px] text-white/80">
+              <li class="flex gap-2"><span class="text-[#00e676]">✓</span> Pivot Points, RSI Divergence, MACD</li>
+              <li class="flex gap-2"><span class="text-[#00e676]">✓</span> Volume Spike + Candle Pattern Engine</li>
+              <li class="flex gap-2"><span class="text-[#00e676]">✓</span> Ghost Pattern Forecast</li>
+              <li class="flex gap-2"><span class="text-[#00e676]">✓</span> Auto SL/TP with 3 targets</li>
+              <li class="flex gap-2"><span class="text-[#00e676]">✓</span> Live Dashboard (6/7, 7/7 scores)</li>
+            </ul>
+            <div class="mt-6 pt-5 border-t border-white/5 flex items-center justify-between">
+              <span class="text-[13px] text-white/50">Best for scalping & intraday</span>
+              <span class="text-[12px] font-mono px-2 py-1 rounded bg-white/5">NO REPAINT</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Indicator 2 -->
+        <div class="group relative glass rounded-[24px] p-[1px] overflow-hidden reveal" style="transition-delay:.05s">
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-gradient-to-b from-white/10 to-transparent"></div>
+          <div class="relative rounded-[23px] bg-[#0a131d]/80 p-7 h-full">
+            <div class="flex items-start justify-between">
+              <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 grid place-items-center">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00bcd4" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M6.34 17.66l-2.12 2.12M19.78 4.22l-2.12 2.12"/></svg>
+              </div>
+              <span class="text-[11px] px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-white/60 font-medium">NEW</span>
+            </div>
+            <h3 class="mt-5 text-[26px] font-semibold">ScalpMaster Trend X</h3>
+            <p class="text-[14px] text-white/60">Smart Trend & Swing System</p>
+            <ul class="mt-5 space-y-2 text-[14px] text-white/80">
+              <li class="flex gap-2"><span class="text-[#00bcd4]">✓</span> Multi-timeframe trend filter</li>
+              <li class="flex gap-2"><span class="text-[#00bcd4]">✓</span> Dynamic support/resistance zones</li>
+              <li class="flex gap-2"><span class="text-[#00bcd4]">✓</span> Early reversal alerts</li>
+              <li class="flex gap-2"><span class="text-[#00bcd4]">✓</span> Swing targets & trailing stop</li>
+              <li class="flex gap-2"><span class="text-[#00bcd4]">✓</span> Works on all markets</li>
+            </ul>
+            <div class="mt-6 pt-5 border-t border-white/5 flex items-center justify-between">
+              <span class="text-[13px] text-white/50">Best for swing & trend trading</span>
+              <span class="text-[12px] font-mono px-2 py-1 rounded bg-white/5">NO REPAINT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-10 text-center">
+        <p class="text-[14px] text-white/60">Starter = pick 1 indicator • Pro & Ultimate = get both indicators included</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="relative z-20 py-20 border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto reveal">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00e676]/10 border border-[#00e676]/20 text-[#00e676] text-[11px] font-medium tracking-widest uppercase mb-4">
+          3-DAY MONEY-BACK GUARANTEE
+        </div>
+        <h2 class="font-display text-[48px] sm:text-[56px] leading-none">EVERYTHING YOU NEED TO WIN</h2>
+        <p class="mt-3 text-white/65 text-[16px]">Professional-grade TradingView tools with zero fluff. If the indicator doesn’t fit your style within 3 days, we’ll refund 100% — no questions asked.</p>
+      </div>
+
+      <div class="mt-14">
+        <div class="grid md:grid-cols-3 gap-8 mb-12 text-left">
+          <div class="reveal">
+            <div class="text-[13px] font-mono text-[#00e676] mb-3">CORE ENGINE</div>
+            <h3 class="text-[20px] font-semibold mb-2">Precision Signals</h3>
+            <p class="text-[14px] text-white/60">7-factor confluence, pivot levels, divergence detection, and volume filters ensure only high-probability setups.</p>
+          </div>
+          <div class="reveal" style="transition-delay:.05s">
+            <div class="text-[13px] font-mono text-[#00bcd4] mb-3">AUTOMATION</div>
+            <h3 class="text-[20px] font-semibold mb-2">Set & Forget</h3>
+            <p class="text-[14px] text-white/60">Auto SL/TP, 3 take-profits, TradingView alerts, and live dashboard. Trade while you sleep.</p>
+          </div>
+          <div class="reveal" style="transition-delay:.1s">
+            <div class="text-[13px] font-mono text-[#ffd600] mb-3">SUPPORT</div>
+            <h3 class="text-[20px] font-semibold mb-2">Lifetime Access</h3>
+            <p class="text-[14px] text-white/60">Free updates forever, priority support, and 3-day refund guarantee. We win when you win.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- features -->
+        <div class="glass rounded-2xl p-5 hover:bg-white/[0.06] transition reveal"><div class="flex items-start gap-3"><div class="mt-0.5 w-8 h-8 grid place-items-center rounded-lg bg-[#ffd600]/15 text-[#ffd600]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 5-5"/></svg></div><div><h4 class="font-semibold">Daily Pivot Points</h4><p class="text-[13px] text-white/60 mt-1">Auto P, R1/R2, S1/S2 with institutional levels.</p></div></div></div>
+        <div class="glass rounded-2xl p-5 hover:bg-white/[0.06] transition reveal"><div class="flex items-start gap-3"><div class="mt-0.5 w-8 h-8 grid place-items-center rounded-lg bg-[#00bcd4]/15 text-[#00bcd4]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h4l3 8 4-16 3 8h6"/></svg></div><div><h4 class="font-semibold">RSI + Divergence</h4><p class="text-[13px] text-white/60 mt-1">Hidden & regular divergence detection built-in.</p></div></div>
+        <div class="glass rounded-2xl p-5 hover:bg-white/[0.06] transition reveal"><div class="flex items-start gap-3"><div class="mt-0.5 w-8 h-8 grid place-items-center rounded-lg bg-[#00e676]/15 text-[#00e676]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l2 5 4-10 2 5h6"/></svg></div><h4 class="font-semibold">MACD Confluence</h4><p class="text-[13px] text-white/60 mt-1">Signal line cross + histogram momentum filter.</p></div></div>
+        <div class="glass rounded-2xl p-5 hover:bg-white/[0.06] transition reveal"><div class="flex items-start gap-3"><div class="mt-0.5 w-8 h-8 grid place-items-center rounded-lg bg-[#ff1744]/15 text-[#ff1744]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v4h4M21 21v-4h-4M21 3l-5 5M3 21l5-5"/></svg></div><h4 class="font-semibold">Volume Spike Filter</h4><p class="text-[13px] text-white/60 mt-1">Only trade real moves. Adjustable multiplier.</p></div></div>
+        <div class="glass rounded-2xl p-5 hover:bg-white/[0.06] transition reveal"><div class="flex items-start gap-3"><div class="mt-0.5 w-8 h-8 grid place-items-center rounded-lg bg-white/10 text-white/80"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div><h4 class="font-semibold">Candle Pattern Engine</h4><p class="text-[13px] text-white/60 mt-1">Engulfing, pin bar, and momentum patterns.</p></div></div>
+        <div class="glass rounded-2xl p-5 hover:bg-white/[0.06] transition reveal"><div class="flex items-start gap-3"><div class="mt-0.5 w-8 h-8 grid place-items-center rounded-lg bg-[#00bcd4]/15 text-[#00bcd4]"><svg width="16" height="16" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><h4 class="font-semibold">Ghost Pattern Forecast</h4><p class="text-[13px] text-white/60 mt-1">Forward projection of structure (PRO feature).</p></div></div></div>
+        <div class="glass rounded-2xl p-5 hover:bg-white/[0.06] transition reveal"><div class="flex items-start gap-3"><div class="mt-0.5 w-8 h-8 grid place-items-center rounded-lg bg-[#00e676]/15 text-[#00e676]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><h4 class="font-semibold">Auto SL/TP Lines</h4><p class="text-[13px] text-white/60 mt-1">3 take-profits + stop based on ATR & pivots.</p></div></div></div>
+        <div class="glass rounded-2xl p-5 hover:bg-white/[0.06] transition reveal"><div class="flex items-start gap-3"><div class="mt-0.5 w-8 h-8 grid place-items-center rounded-lg bg-white/10 text-white/80"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></div><h4 class="font-semibold">Live Dashboard Table</h4><p class="text-[13px] text-white/60 mt-1">See every factor status in real-time.</p></div></div>
+        <div class="glass rounded-2xl p-5 hover:bg-white/[0.06] transition reveal"><div class="flex items-start gap-3"><div class="mt-0.5 w-8 h-8 grid place-items-center rounded-lg bg-[#ffd600]/15 text-[#ffd600]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><div><h4 class="font-semibold">TradingView Alerts</h4><p class="text-[13px] text-white/60 mt-1">Native alerts for LONG, SHORT, SL/TP hits.</p></div></div></div>
+        <div class="glass rounded-2xl p-5 hover:bg-white/[0.06] transition reveal"><div class="flex items-start gap-3"><div class="mt-0.5 w-8 h-8 grid place-items-center rounded-lg bg-white/10 text-white/80"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg></div><div><h4 class="font-semibold">All Markets & TFs</h4><p class="text-[13px] text-white/60 mt-1">Crypto, Forex, Stocks, Indices. 1m to 1D.</p></div></div></div>
+        <div class="glass rounded-2xl p-5 hover:bg-white/[0.06] transition reveal"><div class="flex items-start gap-3"><div class="mt-0.5 w-8 h-8 grid place-items-center rounded-lg bg-[#00e676]/15 text-[#00e676]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h4 class="font-semibold">Zero Repainting</h4><p class="text-[13px] text-white/60 mt-1">Signals confirm on bar close. What you see is what you get.</p></div></div></div>
+        <div class="glass rounded-2xl p-5 hover:bg-white/[0.06] transition reveal"><div class="flex items-start gap-3"><div class="mt-0.5 w-8 h-8 grid place-items-center rounded-lg bg-white/10 text-white/80"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></div><div><h4 class="font-semibold">Free Future Updates</h4><p class="text-[13px] text-white/60 mt-1">Lifetime access includes all v3.x and v4 upgrades.</p></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="relative z-20 py-24 border-t border-white/5">
+    <div class="absolute inset-0 bg-gradient-to-b from-[#00e676]/[0.03] to-transparent pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div class="text-center max-w-2xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ffd600]/10 border border-[#ffd600]/20 text-[#ffd600] text-[11px] font-medium tracking-widest uppercase mb-4">70% OFF — TODAY ONLY</div>
+        <div class="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#00e676]/10 border border-[#00e676]/20 text-[#00e676] text-[12px] font-medium"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> 3-Day Money-Back Guarantee — Full refund if not satisfied</div>
+        <h2 class="font-display text-[52px] sm:text-[68px] leading-none">LIFETIME ACCESS</h2>
+        <p class="mt-3 text-white/65">One-time payment. No subscription. Instant TradingView invite.</p>
+        <div class="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-[13px] font-mono">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffd600" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          Offer ends in <span id="countdown" class="text-[#ffd600]">00:00:00</span>
+        </div>
+      </div>
+
+      <div class="mt-14 grid lg:grid-cols-3 gap-5 max-w-6xl mx-auto">
+        <!-- Starter -->
+        <div class="group relative glass rounded-[24px] p-[1px] reveal">
+          <div class="relative rounded-[23px] bg-[#0a131d]/90 p-7 h-full">
+            <div class="flex items-center justify-between">
+              <h3 class="text-[22px] font-semibold">Starter</h3>
+              <span class="text-[11px] px-2 py-1 rounded-full bg-white/5 border border-white/10 text-white/60">1 INDICATOR</span>
+            </div>
+            <div class="mt-5 flex items-baseline gap-2">
+              <div class="text-[44px] font-medium leading-none">$15</div>
+              <div class="text-[15px] text-white/40 line-through">$49</div>
+              <div class="ml-auto text-[12px] px-2 py-1 rounded bg-[#00e676]/15 text-[#00e676] border border-[#00e676]/20">SAVE $34</div>
+            </div>
+            <p class="mt-3 text-[13px] text-white/60">Choose 1 indicator. Perfect to start.</p>
+            <ul class="mt-6 space-y-2.5 text-[14px]">
+              <li class="flex gap-2.5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span>ScalpMaster Pro <strong>OR</strong> Trend X</span></li>
+              <li class="flex gap-2.5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span>Lifetime access, no subscription</span></li>
+              <li class="flex gap-2.5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span>TradingView alerts included</span></li>
+              <li class="flex gap-2.5 text-white/40"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg><span>Second indicator</span></li>
+              <li class="flex gap-2.5 text-white/40"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg><span>Personal guide</span></li>
+            </ul>
+            <a href="checkout.html?plan=starter" class="mt-7 w-full inline-flex justify-center items-center h-11 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 font-medium transition">Get Starter</a>
+          </div>
+        </div>
+
+        <!-- Pro -->
+        <div class="group relative rounded-[24px] p-[1.5px] bg-gradient-to-b from-[#00e676] to-[#00bcd4] shadow-[0_0_60px_rgba(0,230,118,0.2)] reveal" style="transition-delay:.05s">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#0b1520] border border-[#00e676]/50 text-[11px] font-semibold tracking-wide text-[#00e676] shadow-lg">BEST VALUE</div>
+          <div class="relative rounded-[22px] bg-[#07111b] p-7 h-full">
+            <div class="flex items-center justify-between">
+              <h3 class="text-[22px] font-semibold">Pro</h3>
+              <span class="text-[11px] px-2 py-1 rounded-full bg-[#00e676]/15 border border-[#00e676]/30 text-[#00e676]">MOST POPULAR</span>
+            </div>
+            <div class="mt-5 flex items-baseline gap-2">
+              <div class="text-[48px] font-medium leading-none price-gradient">$30</div>
+              <div class="text-[15px] text-white/40 line-through">$99</div>
+              <div class="ml-auto text-[12px] px-2 py-1 rounded bg-[#00e676]/15 text-[#00e676] border border-[#00e676]/20">SAVE $69</div>
+            </div>
+            <p class="mt-3 text-[13px] text-white/70">Both indicators included. Promo price.</p>
+            <ul class="mt-6 space-y-2.5 text-[14px]">
+              <li class="flex gap-2.5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span><strong>ScalpMaster Pro + Trend X</strong></span></li>
+              <li class="flex gap-2.5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span>Normally $99 — now $30 promo</span></li>
+              <li class="flex gap-2.5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span>All features unlocked</span></li>
+              <li class="flex gap-2.5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span>Lifetime updates included</span></li>
+              <li class="flex gap-2.5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span>Priority support</span></li>
+            </ul>
+            <a href="checkout.html?plan=pro" class="mt-7 w-full inline-flex justify-center items-center h-12 rounded-xl bg-gradient-to-r from-[#00e676] to-[#00bcd4] text-black font-semibold shadow-lg shadow-emerald-900/30 hover:opacity-95 transition">Get Pro Access →</a>
+            <div class="mt-3 text-center text-[11px] text-white/50">1 TradingView account • Both indicators</div>
+          </div>
+        </div>
+
+        <!-- Ultimate -->
+        <div class="group relative glass rounded-[24px] p-[1px] reveal" style="transition-delay:.1s">
+          <div class="relative rounded-[23px] bg-[#0a131d]/90 p-7 h-full">
+            <div class="flex items-center justify-between">
+              <h3 class="text-[22px] font-semibold">Ultimate</h3>
+              <span class="text-[11px] px-2 py-1 rounded-full bg-white/5 border border-white/10 text-white/60">PERSONAL GUIDE</span>
+            </div>
+            <div class="mt-5 flex items-baseline gap-2">
+              <div class="text-[44px] font-medium leading-none">$54</div>
+              <div class="text-[15px] text-white/40 line-through">$179</div>
+              <div class="ml-auto text-[12px] px-2 py-1 rounded bg-[#00e676]/15 text-[#00e676] border border-[#00e676]/20">SAVE $125</div>
+            </div>
+            <p class="mt-3 text-[13px] text-white/60">Both indicators + personal coaching.</p>
+            <ul class="mt-6 space-y-2.5 text-[14px]">
+              <li class="flex gap-2.5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span><strong>Both indicators included</strong></span></li>
+              <li class="flex gap-2.5"><svg width="18" height="18" viewBox="0 0 24" fill="none" stroke="#00e676" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span>Personal 1-on-1 guide session</span></li>
+              <li class="flex gap-2.5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span>VIP Telegram Group</span></li>
+              <li class="flex gap-2.5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span>Setup & strategy walkthrough</span></li>
+            </ul>
+            <a href="checkout.html?plan=starter" class="mt-7 w-full inline-flex justify-center items-center h-11 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 font-medium transition">Get Ultimate</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-6 text-[13px] text-white/55">
+        <div class="flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Secure USDT (TRC20/ERC20)</div>
+        <div class="flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> No monthly fees</div>
+        <div class="flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg> 4,800+ traders</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="relative z-20 py-20 border-t border-white/5">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center reveal">
+        <h2 class="font-display text-[44px] sm:text-[52px] leading-none">QUESTIONS, ANSWERED</h2>
+      </div>
+      <div class="mt-10 space-y-3">
+        <details class="group glass rounded-2xl p-5 open:bg-white/[0.06] transition reveal">
+          <summary class="flex items-center justify-between cursor-pointer list-none">
+            <span class="font-medium">How fast do I get access?</span>
+            <svg class="transition group-open:rotate-180" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <p class="mt-3 text-[14px] text-white/65 leading-relaxed">Instant. After USDT payment, you’ll receive a TradingView invite link within 2-5 minutes via email. Click, add to favorites, done.</p>
+        </details>
+        <details class="group glass rounded-2xl p-5 open:bg-white/[0.06] transition reveal">
+          <summary class="flex items-center justify-between cursor-pointer list-none">
+            <span class="font-medium">Do I need a paid TradingView account?</span>
+            <svg class="transition group-open:rotate-180" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6-6"/></svg>
+          </summary>
+          <p class="mt-3 text-[14px] text-white/65 leading-relaxed">No. ScalpMaster Pro works on free TradingView accounts. A paid plan just gives you more alerts and charts.</p>
+        </details>
+        <details class="group glass rounded-2xl p-5 open:bg-white/[0.06] transition reveal">
+          <summary class="flex items-center justify-between cursor-pointer list-none">
+            <span class="font-medium">Which markets and timeframes?</span>
+            <svg class="transition group-open:rotate-180" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <p class="mt-3 text-[14px] text-white/65 leading-relaxed">All. Crypto, forex, stocks, indices, commodities. Best results on 1m-15m for scalping, 1H-4H for swings.</p>
+        </details>
+        <details class="group glass rounded-2xl p-5 open:bg-white/[0.06] transition reveal">
+          <summary class="flex items-center justify-between cursor-pointer list-none">
+            <span class="font-medium">Does it repaint?</span>
+            <svg class="transition group-open:rotate-180" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <p class="mt-3 text-[14px] text-white/65 leading-relaxed">Never. Signals are confirmed on bar close. The dashboard may update intra-bar, but arrows and SL/TP lines are fixed after close.</p>
+        </details>
+        <details class="group glass rounded-2xl p-5 open:bg-white/[0.06] transition reveal">
+          <summary class="flex items-center justify-between cursor-pointer list-none">
+            <span class="font-medium">How does USDT payment work?</span>
+            <svg class="transition group-open:rotate-180" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <p class="mt-3 text-[14px] text-white/65 leading-relaxed">Checkout supports USDT TRC20 and ERC20. Pay, upload TX hash, and access is automated. No subscription, no card needed.</p>
+        </details>
+        <details class="group glass rounded-2xl p-5 open:bg-white/[0.06] transition reveal">
+          <summary class="flex items-center justify-between cursor-pointer list-none">
+            <span class="font-medium">Is this a subscription?</span>
+            <svg class="transition group-open:rotate-180" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <p class="mt-3 text-[14px] text-white/65 leading-relaxed">No. One-time lifetime payment. Includes all future updates for your purchased tier.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="relative z-20 py-20 border-t border-white/5">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="relative overflow-hidden rounded-[32px] glass-strong p-[1px]">
+        <div class="absolute -inset-40 bg-[radial-gradient(600px_200px_at_50%_0%,rgba(0,230,118,0.15),transparent)] pointer-events-none"></div>
+        <div class="relative rounded-[31px] bg-[#070e16]/80 px-8 sm:px-14 py-14 text-center">
+          <h3 class="font-display text-[44px] sm:text-[64px] leading-[0.9] tracking-wide">TRADE WITH EDGE</h3>
+          <p class="mt-4 text-[16px] text-white/65 max-w-xl mx-auto">Stop guessing tops and bottoms. Get the 7-factor confluence system trusted by 4,800+ traders.</p>
+          <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a href="checkout.html" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 h-[52px] px-8 rounded-full bg-white text-black font-semibold hover:translate-y-[-1px] transition">
+              Get Lifetime Access — $30
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+            <div class="text-[13px] text-white/50">70% OFF ends tonight • No subscription</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Mobile menu
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuBtn?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+    // Countdown to midnight
+    function updateCountdown() {
+      const now = new Date();
+      const midnight = new Date();
+      midnight.setHours(24,0,0,0);
+      const diff = midnight - now;
+      const h = String(Math.floor(diff/3.6e6)).padStart(2,'0');
+      const m = String(Math.floor(diff%3.6e6/6e4)).padStart(2,'0');
+      const s = String(Math.floor(diff%6e4/1000)).padStart(2,'0');
+      const t = `${h}:${m}:${s}`;
+      document.getElementById('top-countdown').textContent = t;
+      document.getElementById('countdown').textContent = t;
+    }
+    updateCountdown(); setInterval(updateCountdown, 1000);
+
+    // Live ticker
+    async function loadTicker() {
+      const el = document.getElementById('ticker');
+      const coins = [
+        {id:'bitcoin', sym:'BTC'},
+        {id:'ethereum', sym:'ETH'},
+        {id:'solana', sym:'SOL'},
+        {id:'binancecoin', sym:'BNB'},
+        {id:'xrp', sym:'XRP'},
+        {id:'cardano', sym:'ADA'},
+        {id:'dogecoin', sym:'DOGE'}
+      ];
+      try {
+        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids='+coins.map(c=>c.id).join(',')+'&vs_currencies=usd&include_24hr_change=true');
+        const data = await res.json();
+        const items = coins.map(c=>{
+          const p = data[c.id]?.usd ?? 0;
+          const ch = data[c.id]?.usd_24h_change ?? 0;
+          const up = ch >= 0;
+          return `<div class="flex items-center gap-2.5">
+            <span class="text-white/50">${c.sym}</span>
+            <span class="text-white">$${p.toLocaleString(undefined,{maximumFractionDigits: p>100?2:4})}</span>
+            <span class="flex items-center gap-1 ${up?'text-[#00e676]':'text-[#ff5252]'}">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M${up?'6 15l6-6 6 6':'6 9l6 6 6-6'}"/></svg>
+              ${Math.abs(ch).toFixed(2)}%
+            </span>
+          </div>`;
+        }).join('<span class="text-white/15">•</span>');
+        el.innerHTML = items + '<span class="text-white/15">•</span>' + items;
+      } catch(e) {
+        el.innerHTML = `<div class="text-white/50">Market data loading… ScalpMaster Pro works on all markets • No repaint • 7-factor confluence</div>`;
+      }
+    }
+    loadTicker(); setInterval(loadTicker, 60000);
+
+    // Reveal on scroll
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+    }, {threshold:0.1});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+    // Particles
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let w, h, particles=[];
+    function resize(){ w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; particles = Array.from({length: 60},()=>({x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-0.5)*0.2, vy:(Math.random()-0.5)*0.2, r: Math.random()*1.5+0.3 }));}
+    function tick(){
+      ctx.clearRect(0,0,w,h);
+      particles.forEach(p=>{
+        p.x+=p.vx; p.y+=p.vy;
+        if(p.x<0||p.x>w) p.vx*=-1;
+        if(p.y<0||p.y>h) p.vy*=-1;
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle='rgba(0,230,118,0.5)'; ctx.fill();
+      });
+      requestAnimationFrame(tick);
+    }
+    resize(); tick(); window.addEventListener('resize', resize);
+  </script>
 
   <!-- Footer -->
-  <div class="max-w-6xl mx-auto mt-14 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-[13px] text-white/40">
-    <div class="flex items-center gap-4">
-      <span>© 2025 ScalpMaster Pro</span>
-      <span class="hidden sm:block">•</span>
-      <a href="/refund" class="hover:text-white/70 underline-offset-4">Refund Policy</a>
-      <a href="/" class="hover:text-white/70 underline underline-offset-4">Back to site</a>
-    </div>
-    <div class="flex items-center gap-1.5">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-emerald-400/70"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      <span>Payments processed securely via USDT</span>
-    </div>
-  </div>
-</main>
-
-<!-- Success Modal -->
-<div id="success-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
-  <div class="absolute inset-0 bg-black/80 backdrop-blur-xl" id="modal-backdrop"></div>
-  <div class="relative glass-strong rounded-[28px] p-8 max-w-[420px] w-full text-center">
-    <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center mb-5 glow-emerald">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="text-black"><polyline points="20 6 9 17 4 12"/></svg>
-    </div>
-    <h3 class="text-[24px] font-bold mb-2">Payment Verification Started</h3>
-    <p class="text-white/70 text-[15px] leading-snug">We're checking your transaction now. You'll receive access to <span id="modal-plan" class="text-white font-medium">Pro</span> within 5–30 minutes at <span id="modal-email" class="text-emerald-300">your email</span>.</p>
-    <div class="mt-6 p-3 rounded-xl bg-white/5 border border-white/10 text-[13px] text-white/60">TradingView: <span id="modal-tv" class="text-white font-mono">@username</span></div>
-    <button id="modal-close" class="mt-6 w-full h-11 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 font-medium transition">Done</button>
-  </div>
-</div>
-
-<script>
-const plans = {
-  starter: {
-    name: 'Starter - 1 Indicator',
-    promo: 15, original: 49, save: 34,
-    features: [
-      '1 Premium Indicator (ScalpMaster Pro OR Volume Flow)',
-      'Lifetime access on 1 TradingView account',
-      'Private setup video guide',
-      'Email support (24h response)'
-    ]
-  },
-  pro: {
-    name: 'Pro - Both Indicators',
-    promo: 30, original: 99, save: 69,
-    features: [
-      'BOTH indicators included',
-      'Lifetime access + all future updates',
-      'Priority setup in 15 minutes',
-      'Telegram VIP signals (30 days)',
-      'Advanced scalping strategy PDF'
-    ]
-  },
-  ultimate: {
-    name: 'Ultimate - Both + Personal Guide',
-    promo: 54, original: 179, save: 125,
-    features: [
-      'Everything in Pro included',
-      '1-on-1 Personal Strategy Call (30 min)',
-      'Custom settings for your trading style',
-      'Lifetime VIP Telegram access',
-      'Priority 1:1 support for life'
-    ]
-  }
-};
-
-const wallets = {
-  TRC20: 'TXYZ123456789TRC20abc123',
-  ERC20: '0xABC1234567890ERC20def789'
-};
-
-let currentPlan = 'pro';
-let currentNetwork = 'TRC20';
-let promoActive = true;
-
-function getParamPlan() {
-  const p = new URLSearchParams(window.location.search).get('plan');
-  return plans[p] ? p : 'pro';
-}
-
-function updatePlanUI() {
-  const plan = plans[currentPlan];
-  document.getElementById('plan-name').textContent = plan.name;
-  document.getElementById('pay-amount').textContent = `$${promoActive ? plan.promo : plan.original} USDT`;
-  document.getElementById('modal-plan').textContent = plan.name;
-  
-  // tabs
-  document.querySelectorAll('.plan-tab').forEach(btn => {
-    const isActive = btn.dataset.plan === currentPlan;
-    btn.classList.toggle('tab-active', isActive);
-    btn.classList.toggle('text-white/70', !isActive);
-  });
-  
-  // features
-  const featuresList = document.getElementById('features-list');
-  featuresList.innerHTML = plan.features.map(f => `
-    <li class="flex items-start gap-2.5">
-      <div class="mt-0.5 w-5 h-5 rounded-full bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center shrink-0">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="text-emerald-400"><polyline points="20 6 9 17 4 12"/></svg>
+  <footer class="relative z-20 border-t border-white/5 mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid md:grid-cols-4 gap-8 mb-8">
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-[#00e676] to-[#00bcd4] flex items-center justify-center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+            </div>
+            <span class="text-[18px] font-semibold">ScalpMaster<span class="text-white/50 font-light ml-1">PRO</span></span>
+          </div>
+          <p class="text-[13px] text-white/50 leading-relaxed">Professional TradingView indicators built for serious traders. No repaint. No subscription.</p>
+          <div class="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#00e676]/10 border border-[#00e676]/20 text-[#00e676] text-[12px] font-medium">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            3-Day Money-Back Guarantee
+          </div>
+        </div>
+        <div>
+          <h4 class="text-[14px] font-semibold mb-3 text-white/80">Product</h4>
+          <ul class="space-y-2 text-[14px] text-white/60">
+            <li><a href="#features" class="hover:text-white transition">Features</a></li>
+            <li><a href="#indicators" class="hover:text-white transition">Indicators</a></li>
+            <li><a href="#pricing" class="hover:text-white transition">Pricing</a></li>
+            <li><a href="#faq" class="hover:text-white transition">FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-[14px] font-semibold mb-3 text-white/80">Legal</h4>
+          <ul class="space-y-2 text-[14px] text-white/60">
+            <li><a href="refund.html" class="hover:text-white transition">Refund Policy</a></li>
+            <li><a href="#terms" class="hover:text-white transition">Terms of Service</a></li>
+            <li><a href="#privacy" class="hover:text-white transition">Privacy Policy</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-[14px] font-semibold mb-3 text-white/80">Support</h4>
+          <ul class="space-y-2 text-[14px] text-white/60">
+            <li><a href="mailto:support@scalpmaster.online" class="hover:text-white transition">support@scalpmaster.online</a></li>
+            <li><a href="https://t.me/scalpmaster" target="_blank" class="hover:text-white transition">Telegram Community</a></li>
+            <li class="text-white/40 text-[12px] mt-3">Response within 12 hours</li>
+          </ul>
+        </div>
       </div>
-      <span class="text-[14px] leading-snug text-white/85">${f}</span>
-    </li>
-  `).join('');
-
-  updatePricing();
-}
-
-function updatePricing() {
-  const plan = plans[currentPlan];
-  const priceCurrent = document.getElementById('price-current');
-  const priceOriginal = document.getElementById('price-original');
-  const priceOriginalWrap = document.getElementById('price-original-wrap');
-  const saveRow = document.getElementById('save-row');
-  const saveText = document.getElementById('save-text');
-  const badge70 = document.getElementById('badge-70');
-  const badgeEnded = document.getElementById('badge-ended');
-
-  if (promoActive) {
-    priceCurrent.textContent = `$${plan.promo}`;
-    priceOriginal.textContent = `$${plan.original}`;
-    priceOriginalWrap.classList.remove('hidden');
-    saveRow.classList.remove('hidden');
-    saveText.textContent = `You save $${plan.save} (70% OFF)`;
-    badge70.classList.remove('hidden');
-    badge70.classList.add('inline-flex');
-    badgeEnded.classList.add('hidden');
-    badgeEnded.classList.remove('inline-flex');
-  } else {
-    priceCurrent.textContent = `$${plan.original}`;
-    priceOriginalWrap.classList.add('hidden');
-    saveRow.classList.add('hidden');
-    badge70.classList.add('hidden');
-    badge70.classList.remove('inline-flex');
-    badgeEnded.classList.remove('hidden');
-    badgeEnded.classList.add('inline-flex');
-  }
-  document.getElementById('pay-amount').textContent = `$${promoActive ? plan.promo : plan.original} USDT`;
-}
-
-function updateNetworkUI() {
-  document.querySelectorAll('.network-btn').forEach(btn => {
-    const isActive = btn.dataset.network === currentNetwork;
-    const inner = btn.querySelector('div > div');
-    const dot = btn.querySelector('.w-5');
-    
-    if (isActive) {
-      btn.className = 'network-btn relative group p-[1px] rounded-xl bg-gradient-to-b from-emerald-500/50 to-cyan-500/50';
-      dot.className = 'w-5 h-5 rounded-full border-2 border-emerald-400 bg-emerald-400/20 flex items-center justify-center';
-      dot.innerHTML = '<div class="w-2 h-2 rounded-full bg-emerald-400"></div>';
-    } else {
-      btn.className = 'network-btn p-[1px] rounded-xl bg-white/10 hover:bg-white/15 transition';
-      dot.className = 'w-5 h-5 rounded-full border-2 border-white/20';
-      dot.innerHTML = '';
-    }
-  });
-  document.getElementById('wallet-address').textContent = wallets[currentNetwork];
-}
-
-function updateCountdown() {
-  const now = new Date();
-  const midnight = new Date(now);
-  midnight.setHours(24, 0, 0, 0);
-  let diff = midnight - now;
-
-  if (diff <= 0) {
-    diff = 0;
-    if (promoActive) {
-      promoActive = false;
-      updatePricing();
-    }
-  }
-
-  const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
-  const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
-  const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
-  document.getElementById('countdown').textContent = `${h}:${m}:${s}`;
-}
-
-function copyAddress() {
-  const addr = wallets[currentNetwork];
-  navigator.clipboard.writeText(addr).then(() => {
-    const btn = document.getElementById('copy-btn');
-    const prev = btn.textContent;
-    btn.textContent = 'Copied!';
-    btn.classList.add('bg-emerald-500/20', 'text-emerald-300', 'border-emerald-500/30');
-    setTimeout(() => {
-      btn.textContent = prev;
-      btn.classList.remove('bg-emerald-500/20', 'text-emerald-300', 'border-emerald-500/30');
-    }, 1800);
-  });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  currentPlan = getParamPlan();
-  updatePlanUI();
-  updateNetworkUI();
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
-
-  // plan tabs
-  document.querySelectorAll('.plan-tab').forEach(btn => {
-    btn.addEventListener('click', () => {
-      currentPlan = btn.dataset.plan;
-      const url = new URL(window.location);
-      url.searchParams.set('plan', currentPlan);
-      history.replaceState(null, '', url);
-      updatePlanUI();
-    });
-  });
-
-  // networks
-  document.querySelectorAll('.network-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      currentNetwork = btn.dataset.network;
-      updateNetworkUI();
-    });
-  });
-
-  document.getElementById('copy-btn').addEventListener('click', copyAddress);
-
-  // form
-  const form = document.getElementById('checkout-form');
-  const tvInput = document.getElementById('tv-username');
-  const emailInput = document.getElementById('email');
-  const stepNum = document.getElementById('step-num');
-
-  [tvInput, emailInput, document.getElementById('tx-hash')].forEach(input => {
-    input.addEventListener('input', () => {
-      let step = 1;
-      if (tvInput.value.trim().length > 2) step = 2;
-      if (emailInput.value.includes('@')) step = 3;
-      if (document.getElementById('tx-hash').value.trim().length > 10) step = 4;
-      stepNum.textContent = step;
-    });
-  });
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (!tvInput.value.trim() || !emailInput.value.trim() || !document.getElementById('tx-hash').value.trim()) {
-      tvInput.focus();
-      tvInput.classList.add('ring-2', 'ring-red-500/50');
-      setTimeout(() => tvInput.classList.remove('ring-2', 'ring-red-500/50'), 1500);
-      return;
-    }
-
-    document.getElementById('modal-email').textContent = emailInput.value;
-    document.getElementById('modal-tv').textContent = '@' + tvInput.value.replace('@','');
-    document.getElementById('success-modal').classList.remove('hidden');
-    document.getElementById('success-modal').classList.add('flex');
-  });
-
-  document.getElementById('modal-close').addEventListener('click', () => {
-    document.getElementById('success-modal').classList.add('hidden');
-    document.getElementById('success-modal').classList.remove('flex');
-  });
-  document.getElementById('modal-backdrop').addEventListener('click', () => {
-    document.getElementById('modal-close').click();
-  });
-});
-</script>
+      <div class="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px] text-white/40">
+        <div>© 2026 ScalpMaster Pro. All rights reserved.</div>
+        <div class="text-center sm:text-right">Trading involves risk. Past performance is not indicative of future results. <br class="sm:hidden">Only trade with capital you can afford to lose.</div>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
